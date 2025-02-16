@@ -1,0 +1,1 @@
+![Practica](Imagen/PracticaGit.png) 
