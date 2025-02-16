@@ -1,0 +1,1 @@
+![Imagen Error](img/practica1.png)
