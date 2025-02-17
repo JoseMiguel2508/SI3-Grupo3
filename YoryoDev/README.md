@@ -103,3 +103,5 @@ git stash
 git stash pop
 ```
 #### 🔍 **Explicación:** Se usa cuando se necesita cambiar de rama sin perder el progreso actual.
+
+![learngitbranching](img/img1.png)
