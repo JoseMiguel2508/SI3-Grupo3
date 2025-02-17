@@ -48,6 +48,7 @@ git commit
 git branch nueva-rama
 git checkout nueva-rama
 git commit
+```
 #### 🔍 *Explicación: Se crea una rama, se cambia a ella y se realizan commits.*
 
 #### 2️⃣ *Ramas y fusiones*  
@@ -55,6 +56,7 @@ git commit
 💡 **Comandos clave:**  
 ```bash
 git merge rama-secundaria
+```
 #### 🔍 **Explicación:** Se crea una rama, se cambia a ella y se realizan commits.
 
 #### 3️⃣ *Deshaciendo cambios*  
@@ -63,6 +65,7 @@ git merge rama-secundaria
 ```bash
 git reset HEAD~1  # Deshacer el último commit sin eliminar cambios
 git revert HEAD   # Crear un commit que revierte cambios previos
+```
 #### 🔍 **Explicación:** `reset` mueve la rama a un estado anterior, mientras que `revert` crea un nuevo commit para deshacer cambios.
 
 #### 3️⃣ *Deshaciendo cambios*  
@@ -71,6 +74,7 @@ git revert HEAD   # Crear un commit que revierte cambios previos
 ```bash
 git reset HEAD~1  # Deshacer el último commit sin eliminar cambios
 git revert HEAD   # Crear un commit que revierte cambios previos
+```
 #### 🔍 **Explicación:** `reset` mueve la rama a un estado anterior, mientras que `revert` crea un nuevo commit para deshacer cambios.
 
 ### 🔥 Nivel 2: Avanzado en Git
@@ -80,6 +84,7 @@ git revert HEAD   # Crear un commit que revierte cambios previos
 💡 **Comandos clave:**  
 ```bash
 git rebase main
+```
 #### 🔍 **Explicación:** Se aplica una rama sobre otra para mantener un historial más limpio y lineal.
 
 #### 5️⃣ *Cherry-picking*  
@@ -87,6 +92,7 @@ git rebase main
 💡 **Comandos clave:**  
 ```bash
 git cherry-pick <id_commit>
+```
 #### 🔍 **Explicación:** Permite aplicar un commit de una rama a otra sin fusionar todo el contenido.
 
 #### 6️⃣ *Trabajo con git stash*  
@@ -95,4 +101,5 @@ git cherry-pick <id_commit>
 ```bash
 git stash
 git stash pop
+```
 #### 🔍 **Explicación:** Se usa cuando se necesita cambiar de rama sin perder el progreso actual.
