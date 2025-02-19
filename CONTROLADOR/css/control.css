@@ -1,0 +1,15 @@
+.card-status {
+    border-left: 5px solid;
+}
+
+.activo {
+    border-color: green;
+}
+
+.mantenimiento {
+    border-color: orange;
+}
+
+.inactivo {
+    border-color: red;
+}

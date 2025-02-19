@@ -1,0 +1,22 @@
+.d-flex {
+    justify-content: center;
+    align-items: center;
+}
+.navbar {
+    background-color: rgba(220, 48, 0, 0.962);
+    font-size: 60px;
+}
+.container-fluid{
+    background-color: rgba(220, 48, 0, 0.962);
+}
+/* .titulo{
+    color: aqua;
+} */
+ /* Estilo para la marca de la navbar */
+ .navbar-brand {
+    /*color: #ffffff;  Color del texto de la marca */
+    font-size: 40px !important; /* Tamaño de la fuente */
+    font-weight: bold;  /*Hacer la fuente en negrita */
+    /*display: flex;
+    align-items: center;*/
+}
