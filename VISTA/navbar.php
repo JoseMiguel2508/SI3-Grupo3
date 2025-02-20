@@ -37,7 +37,7 @@
             <label class="btn btn-outline-danger" for="btnradio4" onclick="mostrarContenido('contenido4')">Control Conductor</label>
             
             <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btnradio5" onclick="mostrarContenido('contenido5')">Opción 3</label>
+            <label class="btn btn-outline-danger" for="btnradio5" onclick="mostrarContenido('contenido5')">Mantenimiento</label>
         </div>
 
         <div id="contenido" class="text-center border p-3" style="width: 100%; max-width: 100%;">
