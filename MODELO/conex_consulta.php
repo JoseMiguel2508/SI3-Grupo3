@@ -4,7 +4,7 @@ function ejecutarConsulta($query) {
     $host = "localhost";
     $user = "root";
     $password = "";
-    $dbname = "sdsdsdsdsdsdsdsdsdsdsdsds";
+    $dbname = "db_TransAerosur";
 
     // Crear la conexión
     $con = mysqli_connect($host, $user, $password, $dbname);
