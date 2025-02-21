@@ -1,4 +1,45 @@
-body{
-    color: blueviolet;
-    font-size: 40px;
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+h2 {
+    color: #333;
+    font-weight: bold;
+}
+
+/* Botón Nueva Asignación */
+.btn-asignacion {
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn-asignacion:hover {
+    background: #0056b3;
+}
+
+/* Tabla */
+.table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-responsive {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow-y: hidden;
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+}
+
+td {
+    text-align: center;
 }
