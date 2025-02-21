@@ -18,10 +18,11 @@
                 <div class="card card-status activo p-3">
                     <h5>🚚 ABC-123 <span class="badge bg-success">Activo</span></h5>
                     <p>Lat: 40.7128, Lng: -74.0060</p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 75%;"></div>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-success" style="width: 75%;"></div>
                     </div>
                     <p>Último mantenimiento: 14/2/2024</p>
+                    <a href="https://www.google.com/maps?q=40.7128,-74.0060" target="_blank" class="btn btn-primary">Ver en Mapa</a>
                 </div>
             </div>
         </div>
