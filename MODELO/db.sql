@@ -9,7 +9,7 @@ CREATE TABLE usuarios (
     contrasena VARCHAR(255) NOT NULL,
     nombre_completo VARCHAR(100) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
-    rol ENUM('administrador', 'supervisor', 'conductor') NOT NULL,
+    rol ENUM('administrador', 'conductor') NOT NULL,
     estado ENUM('activo', 'inactivo') DEFAULT 'activo',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -23,8 +23,6 @@ CREATE TABLE conductores (
     tipo_licencia VARCHAR(20) NOT NULL,
     fecha_vencimiento_licencia DATE NOT NULL,
     telefono VARCHAR(15) NOT NULL,
-    contacto_emergencia VARCHAR(100),
-    telefono_emergencia VARCHAR(15),
     estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible',
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
@@ -36,7 +34,6 @@ CREATE TABLE vehiculos (
     marca VARCHAR(50) NOT NULL,
     modelo VARCHAR(50) NOT NULL,
     anio INT NOT NULL,
-    tipo_vehiculo ENUM('camion', 'furgoneta', 'autobus', 'automovil') NOT NULL,
     capacidad DECIMAL(10,2),
     estado ENUM('activo', 'mantenimiento', 'inactivo') DEFAULT 'activo',
     ultimo_mantenimiento DATE,
@@ -62,7 +59,6 @@ CREATE TABLE ubicaciones (
     id_vehiculo INT NOT NULL,
     latitud DECIMAL(10,8) NOT NULL,
     longitud DECIMAL(11,8) NOT NULL,
-    velocidad DECIMAL(5,2),
     direccion INT,
     fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo)
@@ -117,16 +113,8 @@ CREATE TABLE alertas (
     severidad ENUM('baja', 'media', 'alta') NOT NULL,
     estado ENUM('activa', 'reconocida', 'resuelta') DEFAULT 'activa',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_resolucion TIMESTAMP,
-    resuelto_por INT,
-    FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
-    FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario)
+    fecha_resolucion TIMESTAMP NULL DEFAULT NULL,
+    resuelto_por INT NULL DEFAULT NULL,
+    FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo) ON DELETE CASCADE,
+    FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
-
--- Índices para optimizar consultas
-CREATE INDEX idx_estado_vehiculo ON vehiculos(estado);
-CREATE INDEX idx_estado_conductor ON conductores(estado);
-CREATE INDEX idx_fecha_ubicacion ON ubicaciones(fecha_hora);
-CREATE INDEX idx_fecha_mantenimiento ON registros_mantenimiento(fecha_servicio);
-CREATE INDEX idx_estado_ruta ON rutas(estado);
-CREATE INDEX idx_estado_alerta ON alertas(estado);
