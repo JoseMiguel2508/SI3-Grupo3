@@ -60,9 +60,9 @@ session_start();?> -->
                 <div class="field">
                     <input type="submit" class="btn" name="submit" value="Iniciar sesión" required>
                 </div>
-                <!-- <div class="links">
+                <div class="links">
                     No tienes cuenta? <a href="registrar.php">Registrate</a>
-                </div> -->
+                </div>
             </form>
         </div>
         <!-- <?php } ?> -->
