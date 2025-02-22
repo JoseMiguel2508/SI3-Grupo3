@@ -1,30 +1,28 @@
 -- Crear la base de datos
-CREATE DATABASE IF NOT EXISTS control_flotas;
-USE control_flotas;
+CREATE DATABASE IF NOT EXISTS control_flotas; 
+USE control_flotas; 
 
--- Tabla de Usuarios
+-- Tabla de Usuarios (solo administradores)
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
     contrasena VARCHAR(255) NOT NULL,
     nombre_completo VARCHAR(100) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
-    rol ENUM('administrador', 'conductor') NOT NULL,
     estado ENUM('activo', 'inactivo') DEFAULT 'activo',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Tabla de Conductores
+-- Tabla de Conductores (sin vínculo con usuarios)
 CREATE TABLE conductores (
     id_conductor INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario INT,
+    nombre_completo VARCHAR(100) NOT NULL,
     numero_licencia VARCHAR(20) NOT NULL UNIQUE,
     tipo_licencia VARCHAR(20) NOT NULL,
     fecha_vencimiento_licencia DATE NOT NULL,
     telefono VARCHAR(15) NOT NULL,
-    estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible',
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
+    estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible'
 );
 
 -- Tabla de Vehículos
@@ -87,7 +85,7 @@ CREATE TABLE rutas (
     descripcion TEXT,
     punto_inicio VARCHAR(100) NOT NULL,
     punto_fin VARCHAR(100) NOT NULL,
-    duracion_estimada INT, -- en minutos
+    duracion_estimada INT,
     estado ENUM('activo', 'inactivo') DEFAULT 'activo',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
