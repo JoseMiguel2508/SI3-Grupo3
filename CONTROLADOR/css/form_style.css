@@ -45,10 +45,15 @@ a:hover {
     cursor: pointer
 }
 
-.btn.btn-primary {
-    margin-top: 20px;
-    border-radius: 15px
+.btn-primary {
+    width: auto; /* Hace que el botón se ajuste al texto */
+    min-width: 120px; /* Ajusta este valor según lo que necesites */
+    padding: 5px 15px;
+    font-size: 14px;
+    border-radius: 8px;
 }
+
+
 
 .panel {
     min-height: 380px;
@@ -124,4 +129,5 @@ a[target='_blank'] {
     .bordert:after {
         left: 25%
     }
+    
 }

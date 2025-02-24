@@ -15,46 +15,48 @@
             <div class="panel-heading">
                 <h3 class="pt-2 font-weight-bold">Nuevo Conductor</h3>
             </div>
+
+            <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'registrado'): ?>
+                <div class="alert alert-success text-center">¡Conductor registrado correctamente!</div>
+            <?php elseif (isset($_GET['error']) && $_GET['error'] == 'fallo'): ?>
+                <div class="alert alert-danger text-center">Error al registrar el conductor. Intente de nuevo.</div>
+            <?php endif; ?>
+
             <div class="panel-body">
-                <form action="guardar_conductor.php" method="POST" class="registration-form">
+                <form action="../CONTROLADOR/ConductorController.php" method="POST" id="registroForm">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="input-field">
                                 <span class="fas fa-id-card p-2"></span>
-                                <input type="text" class="form-control" name="numero_licencia" placeholder="Número de Licencia" required>
+                                <input type="text" class="form-control" name="nombre_completo" placeholder="Nombre Completo" pattern="[A-Za-z\s]+" title="Solo letras y espacios permitidos" required>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             <div class="input-field">
-                                <span class="fas fa-car p-2"></span>
-                                <input type="text" class="form-control" name="tipo_licencia" placeholder="Tipo de Licencia" required>
+                                <span class="fas fa-id-card p-2"></span>
+                                <input type="text" class="form-control" name="numero_licencia" placeholder="Número de Licencia" pattern="[0-9]+" title="Solo números permitidos" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="input-field">
+                                <span class="fas fa-car p-2"></span>
+                                <input type="text" class="form-control" name="tipo_licencia" placeholder="Tipo de Licencia" pattern="[A-Za-z\s]+" title="Solo letras y espacios permitidos" required>
+                            </div>
+                        </div>
                         <div class="form-group col-md-6">
                             <div class="input-field">
                                 <span class="fas fa-calendar-alt p-2"></span>
                                 <input type="date" class="form-control" name="fecha_vencimiento_licencia" required>
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <div class="input-field">
-                                <span class="fas fa-phone p-2"></span>
-                                <input type="text" class="form-control" name="telefono" placeholder="Teléfono" required>
-                            </div>
-                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="input-field">
-                                <span class="fas fa-user p-2"></span>
-                                <select class="form-control" name="usuario" required>
-                                    <option value="">Seleccione un Usuario</option>
-                                    <option value="usuario1">Usuario 1</option>
-                                    <option value="usuario2">Usuario 2</option>
-                                    <option value="usuario3">Usuario 3</option>
-                                </select>
+                                <span class="fas fa-phone p-2"></span>
+                                <input type="text" class="form-control" name="telefono" placeholder="Teléfono" pattern="[0-9]+" title="Solo números permitidos" required>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
@@ -69,7 +71,9 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block mt-3">Guardar Conductor</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-sm mt-3 px-3">Guardar</button>
+                    </div>
                     <div class="text-center mt-2">
                         <a href="conductores.php" class="btn btn-secondary btn-sm">Cancelar</a>
                     </div>
@@ -77,7 +81,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>

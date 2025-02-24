@@ -16,8 +16,24 @@
         <a href="../VISTA/registro_conductor.php" class="btn btn-primary btn-asignacion">Nuevo Conductor</a>
         </div>
 
-        
+        <!-- mensaje de Registrado con exito -->
+        <div id="messageBox" style="display:none; padding: 10px; background-color: lightgreen; color: black; border: 1px solid green;">
+            ¡Registro exitoso!
+        </div>
     </div>
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!--Cargar mensaje -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.location.search.includes("mensaje=registrado")) {
+                document.getElementById("messageBox").style.display = "block";
+                setTimeout(function() {
+                    document.getElementById("messageBox").style.display = "none";
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 
 </html>
