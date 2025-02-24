@@ -35,6 +35,9 @@
 
             <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
             <label class="btn btn-outline-danger" for="btnradio4" onclick="mostrarContenido('control_conductor.php')">Control Conductor</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+            <label class="btn btn-outline-danger" for="btnradio5" onclick="mostrarContenido('main_vehiculo.php')">Vehiculos</label>
             
             <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
             <label class="btn btn-outline-danger" for="btnradio5" onclick="mostrarContenido('contenido5')">Mantenimiento</label>
@@ -57,8 +60,8 @@
                 contenidoFrame.src = "controlflota.php"; // Vaciar el iframe si no se quiere mostrar nada
             }else if (opcion === "control_conductor.php") {
                 contenidoFrame.src = "control_conductor.php"; // Vaciar el iframe si no se quiere mostrar nada
-            }else if (opcion === "contenido3") {
-                contenidoFrame.src = ""; // Vaciar el iframe si no se quiere mostrar nada
+            }else if (opcion === "main_vehiculo.php") {
+                contenidoFrame.src = "main_vehiculo.php"; // Vaciar el iframe si no se quiere mostrar nada
             }
         }
 
