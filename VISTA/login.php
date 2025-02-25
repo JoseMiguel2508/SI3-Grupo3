@@ -1,9 +1,9 @@
 <?php
-session_start(); ?>
-
+session_start();
+?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -16,51 +16,57 @@ session_start(); ?>
 <body>
     <div class="container">
         <div class="box form-box">
-            <?php
-            include("../MODELO/conex_consulta.php");
-            if (isset($_POST['submit'])) {
-                $usuario = mysqli_real_escape_string($con, $_POST['usuario']);
-                $contra = mysqli_real_escape_string($con, $_POST['contra']);
+        <?php 
+            include("../MODELO/conex_consulta.php"); // Se usa la nueva conexión
 
-                $result = mysqli_query($con, "CALL obtener_usuario('$usuario', '$contra')") or die("Ocurrio un error");
-                $row = mysqli_fetch_assoc($result);
+            if(isset($_POST['submit'])){
+                $conexion = Conexion::conectar(); // Llamamos a la nueva clase
 
-                if (is_array($row) && !empty($row)) {//obtener la informacion del inicio de sesion
-                    header("Location: navbar.php");
+                $usuario = $conexion->real_escape_string($_POST['usuario']);
+                $contra = $conexion->real_escape_string($_POST['contra']);
 
+                // Llamada al procedimiento almacenado
+                $query = "CALL ValidarUsuario('$usuario', '$contra')";
+                $result = $conexion->query($query);
+                
+                if(!$result) {
+                    die("Error en la consulta: " . $conexion->error);
+                }
+                $row = $result->fetch_assoc();
+                if ($row) { // Verifica si se encontró un usuario
+                    header("Location: navbar.php"); // Redirigir si es correcto
+                    exit();
                 } else {
                     echo "<div class='message'>
                             <p>Usuario o Contraseña Incorrectos</p>
-                        </div> <br>";
-                    echo "<a href='login.php'><button class='btn'>Volver</button>";
-
+                          </div> <br>";
+                    echo "<a href='login.php'><button class='btn'>Volver</button></a>";
                 }
             } else {
+        ?>
 
+            <header>Iniciar Sesión</header>
+            <form action="" method="post">
+                <div class="field input">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" name="usuario" id="usuario" autocomplete="off" required>
+                </div>
 
-                ?>
+                <div class="field input">
+                    <label for="contra">Contraseña</label>
+                    <input type="password" name="contra" id="contra" autocomplete="off" required>
+                </div>
 
-                <header>Registrarse</header>
-                <form action="" method="post">
-                    <div class="field input">
-                        <label for="usuario">Usuario</label>
-                        <input type="text" name="usuario" id="usuario" autocomplete="off" required>
-                    </div>
+                <div class="field">
+                    <input type="submit" class="btn" name="submit" value="Iniciar sesión">
+                </div>
+                <div class="links">
+                    No tienes cuenta? <a href="registrar.php">Regístrate</a>
+                </div>
+            </form>
 
-                    <div class="field input">
-                        <label for="contra">Contraseña</label>
-                        <input type="password" name="contra" id="contra" autocomplete="off" required>
-                    </div>
-
-                    <div class="field">
-                        <input type="submit" class="btn" name="submit" value="Iniciar sesión" required>
-                    </div>
-                    <div class="links">
-                        No tienes cuenta? <a href="registrar.php">Registrate</a>
-                    </div>
-                </form>
-            </div>
         <?php } ?>
+        </div>
     </div>
 </body>
 
