@@ -25,6 +25,26 @@ CREATE TABLE conductores (
     estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible'
 );
 
+DELIMITER $$
+
+CREATE PROCEDURE registrar_conductor(
+    IN nombre_completo VARCHAR(255),
+    IN numero_licencia VARCHAR(50),
+    IN tipo_licencia VARCHAR(50),
+    IN fecha_vencimiento_licencia DATE,
+    IN telefono VARCHAR(20),
+    IN estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
+    IN foto VARCHAR(255)
+)
+BEGIN
+    INSERT INTO conductores (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto)
+    VALUES (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto);
+END $$
+
+DELIMITER ;
+
+
+
 -- Tabla de Vehículos
 CREATE TABLE vehiculos (
     id_vehiculo INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,6 +70,7 @@ CREATE TABLE asignaciones_vehiculos (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
+
 
 -- Tabla de Ubicaciones
 CREATE TABLE ubicaciones (

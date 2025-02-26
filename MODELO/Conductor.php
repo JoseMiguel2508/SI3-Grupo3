@@ -1,26 +1,42 @@
 <?php
-require_once 'conex_consulta.php'; //conexión a la base de datos
+require_once 'conex_consulta.php'; // Conexión a la base de datos
 
 class Conductor {
-    private $conn; //almacena la conexión a la base de datos
+    private $conn;
 
     public function __construct() {
-        $this->conn = Conexion::conectar(); //Una instancia de la clase
+        $this->conn = Conexion::conectar();
     }
 
-    //Registrar un conductor en la base de datos
-    public function registrarConductor($nombre, $numeroLicencia, $tipoLicencia, $fechaVencimiento, $telefono, $estado) {
-        // Sentencia SQL para insertar un nuevo conductor en la tabla 'conductores'
-        $sql = "INSERT INTO conductores (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado)
-                VALUES (?, ?, ?, ?, ?, ?)";
 
-        // Prepara la sentencia SQL
+    // Método para buscar conductores de manera flexible
+    public function buscarConductores($terminoBusqueda) {
+        $sql = "SELECT nombre_completo, numero_licencia, tipo_licencia, estado, foto FROM conductores
+                WHERE nombre_completo LIKE ? OR 
+                      numero_licencia LIKE ? OR 
+                      tipo_licencia LIKE ? OR 
+                      estado LIKE ?";
+        
         $stmt = $this->conn->prepare($sql);
-        // Asigna los valores a los parámetros de la sentencia SQL
-        $stmt->bind_param("ssssss", $nombre, $numeroLicencia, $tipoLicencia, $fechaVencimiento, $telefono, $estado);
+        if ($stmt === false) {
+            // Si hay un error en la preparación de la consulta
+            die('Error en la consulta: ' . $this->conn->error);
+        }
 
-        // Ejecuta la sentencia SQL y retorna el resultado
-        return $stmt->execute();
+        $termino = '%' . $terminoBusqueda . '%';
+        $stmt->bind_param("ssss", $termino, $termino, $termino, $termino);
+
+        $stmt->execute();
+        
+        // Verificar si la consulta ejecutada devuelve resultados
+        $resultado = $stmt->get_result();
+        
+        if ($resultado === false) {
+            // Si no se obtienen resultados
+            die('Error en la ejecución de la consulta: ' . $this->conn->error);
+        }
+
+        return $resultado; // Retorna los resultados de la búsqueda
     }
 }
 ?>

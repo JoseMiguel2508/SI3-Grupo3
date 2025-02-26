@@ -23,7 +23,7 @@
             <?php endif; ?>
 
             <div class="panel-body">
-                <form action="../CONTROLADOR/ConductorController.php" method="POST" id="registroForm">
+                <form action="../CONTROLADOR/ConductorController.php" method="POST" id="registroForm" enctype="multipart/form-data">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="input-field">
@@ -34,7 +34,7 @@
                         <div class="form-group col-md-6">
                             <div class="input-field">
                                 <span class="fas fa-id-card p-2"></span>
-                                <input type="text" class="form-control" name="numero_licencia" placeholder="Número de Licencia" pattern="[0-9]+" title="Solo números permitidos" required>
+                                <input type="text" class="form-control" name="numero_licencia" placeholder="Número de Licencia" pattern="[A-Za-z0-9]+" title="Solo letras y números permitidos" required>
                             </div>
                         </div>
                     </div>
@@ -71,6 +71,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Campo para subir foto con vista previa -->
+                    <div class="form-group">
+                        <label for="foto"><strong>Foto del Conductor</strong></label>
+                        <input type="file" class="form-control-file" name="foto" id="foto" accept="image/*" onchange="previewImage(event)">
+                        <div class="mt-2 text-center">
+                            <img id="preview" src="../assets/default-user.png" alt="Vista previa" class="img-thumbnail" style="max-width: 150px; display: none;">
+                        </div>
+                    </div>
+
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary btn-sm mt-3 px-3">Guardar</button>
                     </div>
@@ -84,5 +94,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var preview = document.getElementById('preview');
+                preview.src = reader.result;
+                preview.style.display = "block";
+            }
+            if(event.target.files.length > 0) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>
