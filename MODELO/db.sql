@@ -124,8 +124,8 @@ ADD COLUMN foto VARCHAR(255);
 
 -- Eliminar columnas ultima_ubicacion y ultima_actualizacion de vehiculos
 ALTER TABLE vehiculos
-DROP COLUMN ultima_ubicacion,
-DROP COLUMN ultima_actualizacion;
+DROP COLUMN ultimo_mantenimiento,
+DROP COLUMN proximo_mantenimiento;
 
 ----///////PROCEDURES///////----
 
@@ -164,7 +164,6 @@ END $$
 
 DELIMITER ;
 
-
 -------- Validar Login ----------
 DELIMITER $$
 
@@ -178,9 +177,9 @@ BEGIN
     WHERE nombre_usuario = p_nombre_usuario
       AND contrasena = SHA2(p_contrasena, 256)
       AND estado = 'activo';
-END $$
+END $$
 
-DELIMITER ;
+DELIMITER ;
 
 -------- Registrar Vehiculo ----------
 DELIMITER $$
