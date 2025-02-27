@@ -118,11 +118,18 @@ CREATE TABLE alertas (
     FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
 
+-- Agregar columna foto a conductores
+ALTER TABLE conductores
+ADD COLUMN foto VARCHAR(255);
 
+-- Eliminar columnas ultima_ubicacion y ultima_actualizacion de vehiculos
+ALTER TABLE vehiculos
+DROP COLUMN ultima_ubicacion,
+DROP COLUMN ultima_actualizacion;
 
 ----///////PROCEDURES///////----
 
-
+--------- Registrar Conductor ----------
 DELIMITER $$
 
 CREATE PROCEDURE registrar_conductor(
@@ -158,7 +165,7 @@ END $$
 DELIMITER ;
 
 
--------- validar Loguin ----------
+-------- Validar Login ----------
 DELIMITER $$
 
 CREATE PROCEDURE ValidarUsuario(
@@ -175,3 +182,74 @@ END $$
 
 DELIMITER ;
 
+-------- Registrar Vehiculo ----------
+DELIMITER $$
+
+CREATE PROCEDURE RegistrarVehiculo(
+    IN p_numero_placa VARCHAR(20),
+    IN p_marca VARCHAR(50),
+    IN p_modelo VARCHAR(50),
+    IN p_anio INT,
+    IN p_capacidad DECIMAL(10,2),
+    IN p_estado ENUM('activo', 'mantenimiento', 'inactivo')
+)
+BEGIN
+    -- Validar que la placa sea única
+    IF EXISTS (SELECT 1 FROM vehiculos WHERE numero_placa = p_numero_placa) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La placa ya está registrada';
+    ELSE
+        -- Insertar el nuevo vehículo
+        INSERT INTO vehiculos (numero_placa, marca, modelo, anio, capacidad, estado)
+        VALUES (p_numero_placa, p_marca, p_modelo, p_anio, p_capacidad, p_estado);
+        
+        -- Confirmar registro exitoso
+        SELECT 'Registro exitoso' AS mensaje;
+    END IF;
+END $$
+
+DELIMITER ;
+
+-------- Editar resgistro de vehiculo ----------
+DELIMITER $$
+
+CREATE PROCEDURE EditarVehiculo(
+    IN p_id_vehiculo INT,
+    IN p_numero_placa VARCHAR(20),
+    IN p_marca VARCHAR(50),
+    IN p_modelo VARCHAR(50),
+    IN p_anio INT,
+    IN p_capacidad DECIMAL(10,2),
+    IN p_estado ENUM('activo', 'mantenimiento', 'inactivo')
+)
+BEGIN
+    -- Validar que la placa sea única, excepto para el vehículo que se está editando
+    IF EXISTS (SELECT 1 FROM vehiculos WHERE numero_placa = p_numero_placa AND id_vehiculo != p_id_vehiculo) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La placa ya está registrada para otro vehículo';
+    ELSE
+        -- Actualizar el vehículo
+        UPDATE vehiculos
+        SET numero_placa = p_numero_placa,
+            marca = p_marca,
+            modelo = p_modelo,
+            anio = p_anio,
+            capacidad = p_capacidad,
+            estado = p_estado
+        WHERE id_vehiculo = p_id_vehiculo;
+        
+        -- Confirmar actualización exitosa
+        SELECT 'Actualización exitosa' AS mensaje;
+    END IF;
+END $$
+
+DELIMITER ;
+
+-------- Listar vehiculos ----------
+DELIMITER $$
+
+CREATE PROCEDURE ListarVehiculos()
+BEGIN
+    SELECT id_vehiculo, numero_placa, marca, modelo, anio, capacidad, estado, fecha_registro
+    FROM vehiculos;
+END $$
+
+DELIMITER ;
