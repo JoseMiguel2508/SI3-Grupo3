@@ -22,25 +22,32 @@
         </div>
     </nav>
 
-    <div class="d-flex flex-column vh-100">
-        <div class="btn-group mb-3" role="group" aria-label="Botones de selección">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-            <label class="btn btn-outline-danger" for="btnradio1" onclick="mostrarContenido('control.php')">Control Ruta</label>
-
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-            <label class="btn btn-outline-danger" for="btnradio2" onclick="mostrarContenido('asignacion.php')">Asignacion</label>
-
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-            <label class="btn btn-outline-danger" for="btnradio3" onclick="mostrarContenido('controlflota.php')">Control Flota</label>
-
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-            <label class="btn btn-outline-danger" for="btnradio4" onclick="mostrarContenido('control_conductor.php')">Control Conductor</label>
-
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-            <label class="btn btn-outline-danger" for="btnradio5" onclick="mostrarContenido('main_vehiculo.php')">Vehiculos</label>
-            
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-            <label class="btn btn-outline-danger" for="btnradio5" onclick="mostrarContenido('contenido5')">Mantenimiento</label>
+    <div class="d-flex flex-column vh-100 align-items-center">
+        <div class="radio-inputs mb-3">
+            <label class="radio">
+                <input checked name="radio" type="radio" onclick="mostrarContenido('control.php')"/>
+                <span class="name">Control Ruta</span>
+            </label>
+            <label class="radio">
+                <input name="radio" type="radio" onclick="mostrarContenido('asigna_ruta.php')"/>
+                <span class="name">Asignacion Ruta</span>
+            </label>
+            <label class="radio">
+                <input name="radio" type="radio" onclick="mostrarContenido('main_vehiculo.php')"/>
+                <span class="name">Control Flota</span>
+            </label>
+            <label class="radio">
+                <input name="radio" type="radio" onclick="mostrarContenido('control_conductor.php')"/>
+                <span class="name">Control Conductor</span>
+            </label>
+            <label class="radio">
+                <input name="radio" type="radio" onclick="mostrarContenido('asigna_conductor.php')"/>
+                <span class="name">Asignacion Conductor</span>
+            </label>
+            <label class="radio">
+                <input name="radio" type="radio" onclick="mostrarContenido('qqqq.php')"/>
+                <span class="name">Mantenimientos</span>
+            </label>
         </div>
 
         <div id="contenido" class="text-center border p-3" style="width: 100%; max-width: 100%;">
@@ -50,22 +57,9 @@
 
     <script>
         function mostrarContenido(opcion) {
-            let contenidoFrame = document.getElementById("contenido-frame");
-
-            if (opcion === "control.php") {
-                contenidoFrame.src = "control.php"; // Cargar cards.html
-            } else if (opcion === "asignacion.php") {
-                contenidoFrame.src = "asignacion.php"; // Cargar index.html
-            } else if (opcion === "controlflota.php") {
-                contenidoFrame.src = "controlflota.php"; // Vaciar el iframe si no se quiere mostrar nada
-            }else if (opcion === "control_conductor.php") {
-                contenidoFrame.src = "control_conductor.php"; // Vaciar el iframe si no se quiere mostrar nada
-            }else if (opcion === "main_vehiculo.php") {
-                contenidoFrame.src = "main_vehiculo.php"; // Vaciar el iframe si no se quiere mostrar nada
-            }
+            document.getElementById("contenido-frame").src = opcion;
         }
 
-        // Cargar automáticamente "cards.html" al iniciar
         window.onload = function () {
             mostrarContenido("control.php");
         };

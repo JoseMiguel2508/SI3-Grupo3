@@ -22,28 +22,9 @@ CREATE TABLE conductores (
     tipo_licencia VARCHAR(20) NOT NULL,
     fecha_vencimiento_licencia DATE NOT NULL,
     telefono VARCHAR(15) NOT NULL,
+    foto VARCHAR(15),
     estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible'
 );
-
-DELIMITER $$
-
-CREATE PROCEDURE registrar_conductor(
-    IN nombre_completo VARCHAR(255),
-    IN numero_licencia VARCHAR(50),
-    IN tipo_licencia VARCHAR(50),
-    IN fecha_vencimiento_licencia DATE,
-    IN telefono VARCHAR(20),
-    IN estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
-    IN foto VARCHAR(255)
-)
-BEGIN
-    INSERT INTO conductores (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto)
-    VALUES (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto);
-END $$
-
-DELIMITER ;
-
-
 
 -- Tabla de Vehículos
 CREATE TABLE vehiculos (
@@ -70,7 +51,6 @@ CREATE TABLE asignaciones_vehiculos (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
-
 
 -- Tabla de Ubicaciones
 CREATE TABLE ubicaciones (
@@ -137,3 +117,61 @@ CREATE TABLE alertas (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo) ON DELETE CASCADE,
     FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
+
+
+
+----///////PROCEDURES///////----
+
+
+DELIMITER $$
+
+CREATE PROCEDURE registrar_conductor(
+    IN nombre_completo VARCHAR(255),
+    IN numero_licencia VARCHAR(50),
+    IN tipo_licencia VARCHAR(50),
+    IN fecha_vencimiento_licencia DATE,
+    IN telefono VARCHAR(20),
+    IN estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
+    IN foto VARCHAR(255)
+)
+BEGIN
+    INSERT INTO conductores (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto)
+    VALUES (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto);
+END $$
+
+DELIMITER ;
+
+--------- Insertar Usuario ----------
+DELIMITER $$
+
+CREATE PROCEDURE InsertarUsuario(
+    IN p_nombre_usuario VARCHAR(50),
+    IN p_contrasena VARCHAR(255),
+    IN p_nombre_completo VARCHAR(100),
+    IN p_correo VARCHAR(100)
+)
+BEGIN
+    INSERT INTO usuarios (nombre_usuario, contrasena, nombre_completo, correo, estado)
+    VALUES (p_nombre_usuario, SHA2(p_contrasena, 256), p_nombre_completo, p_correo, 'activo');
+END $$
+
+DELIMITER ;
+
+
+-------- validar Loguin ----------
+DELIMITER $$
+
+CREATE PROCEDURE ValidarUsuario(
+    IN p_nombre_usuario VARCHAR(50),
+    IN p_contrasena VARCHAR(255)
+)
+BEGIN
+    SELECT id_usuario, nombre_usuario, nombre_completo, correo, estado
+    FROM usuarios
+    WHERE nombre_usuario = p_nombre_usuario
+      AND contrasena = SHA2(p_contrasena, 256)
+      AND estado = 'activo';
+END $$
+
+DELIMITER ;
+
