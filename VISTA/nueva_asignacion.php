@@ -98,5 +98,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script>
+    // Obtener la fecha y hora actuales
+    const today = new Date();
+
+    // Formatear la fecha y hora en el formato adecuado para el campo datetime-local
+    const year = today.getFullYear();
+    const month = ("0" + (today.getMonth() + 1)).slice(-2); // Meses en formato 2 dígitos
+    const day = ("0" + today.getDate()).slice(-2); // Día en formato 2 dígitos
+    const hours = ("0" + today.getHours()).slice(-2); // Hora en formato 2 dígitos
+    const minutes = ("0" + today.getMinutes()).slice(-2); // Minutos en formato 2 dígitos
+
+    // Crear el formato datetime-local: yyyy-mm-ddThh:mm
+    const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    // Establecer el valor del input datetime-local
+    document.getElementById("fecha_inicio").value = currentDateTime;
+    document.getElementById("fecha_fin").value = currentDateTime;
+
+</script>
 </body>
 </html>

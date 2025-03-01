@@ -14,6 +14,39 @@ CREATE TABLE usuarios (
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+--------- Insertar Usuario ----------
+DELIMITER $$
+
+CREATE PROCEDURE InsertarUsuario(
+    IN p_nombre_usuario VARCHAR(50),
+    IN p_contrasena VARCHAR(255),
+    IN p_nombre_completo VARCHAR(100),
+    IN p_correo VARCHAR(100)
+)
+BEGIN
+    INSERT INTO usuarios (nombre_usuario, contrasena, nombre_completo, correo, estado)
+    VALUES (p_nombre_usuario, SHA2(p_contrasena, 256), p_nombre_completo, p_correo, 'activo');
+END $$
+
+DELIMITER ;
+
+
+-------- validar Loguin ----------
+DELIMITER $$
+
+CREATE PROCEDURE ValidarUsuario(
+    IN p_nombre_usuario VARCHAR(50),
+    IN p_contrasena VARCHAR(255)
+)
+BEGIN
+    SELECT id_usuario, nombre_usuario, nombre_completo, correo, estado
+    FROM usuarios
+    WHERE nombre_usuario = p_nombre_usuario
+      AND contrasena = SHA2(p_contrasena, 256)
+      AND estado = 'activo';
+END $$
+
+DELIMITER ;
 -- Tabla de Conductores (sin vínculo con usuarios)
 CREATE TABLE conductores (
     id_conductor INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,7 +57,7 @@ CREATE TABLE conductores (
     telefono VARCHAR(15) NOT NULL,
     estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible'
 );
-
+--Registrar conductores para    
 DELIMITER $$
 
 CREATE PROCEDURE registrar_conductor(
@@ -43,6 +76,32 @@ END $$
 
 DELIMITER ;
 
+DELIMITER $$
+--Actualizar conductor
+CREATE PROCEDURE actualizar_conductor(
+    IN p_id_conductor INT,
+    IN p_nombre_completo VARCHAR(255),
+    IN p_numero_licencia VARCHAR(50),
+    IN p_tipo_licencia VARCHAR(50),
+    IN p_fecha_vencimiento_licencia DATE,
+    IN p_telefono VARCHAR(20),
+    IN p_estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
+    IN p_foto VARCHAR(255)
+)
+BEGIN
+    UPDATE conductores 
+    SET 
+        nombre_completo = p_nombre_completo,
+        numero_licencia = p_numero_licencia,
+        tipo_licencia = p_tipo_licencia,
+        fecha_vencimiento_licencia = p_fecha_vencimiento_licencia,
+        telefono = p_telefono,
+        estado = p_estado,
+        foto = p_foto
+    WHERE id_conductor = p_id_conductor;
+END $$
+
+DELIMITER ;
 
 
 -- Tabla de Vehículos
@@ -70,6 +129,29 @@ CREATE TABLE asignaciones_vehiculos (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
+
+--Actulizar asignaciones_vehiculos (no esta terminado)
+DELIMITER //
+
+CREATE PROCEDURE editar_asignacion(
+    IN p_id_asignacion INT,
+    IN p_id_conductor INT,
+    IN p_id_vehiculo INT,
+    IN p_fecha_inicio DATETIME,
+    IN p_fecha_fin DATETIME,
+    IN p_estado ENUM('activo', 'completado', 'cancelado')
+)
+BEGIN
+    UPDATE asignaciones_vehiculos
+    SET id_conductor = p_id_conductor,
+        id_vehiculo = p_id_vehiculo,
+        fecha_inicio = p_fecha_inicio,
+        fecha_fin = p_fecha_fin,
+        estado = p_estado
+    WHERE id_asignacion = p_id_asignacion;
+END //
+
+DELIMITER ;
 
 
 -- Tabla de Ubicaciones

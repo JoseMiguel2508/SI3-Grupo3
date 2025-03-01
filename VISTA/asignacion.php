@@ -3,7 +3,14 @@ require_once '../CONTROLADOR/AsignacionControlador.php';
 
 // Instanciar el controlador
 $asignacionControlador = new AsignacionControlador();
-$asignaciones = $asignacionControlador->obtenerAsignacionesActivas();
+
+// Obtener el término de búsqueda
+$terminoBusqueda = isset($_POST['buscar']) ? $_POST['buscar'] : '';
+
+// Obtener las asignaciones activas, filtradas si hay un término de búsqueda
+$asignaciones = $asignacionControlador->obtenerAsignacionesActivas($terminoBusqueda);
+$asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
+
 ?>
 
 <!DOCTYPE html>
@@ -17,6 +24,18 @@ $asignaciones = $asignacionControlador->obtenerAsignacionesActivas();
 <body>
     <div class="container mt-4">
         <h2 class="text-center">Lista de Asignaciones de Vehículos</h2>
+
+        <!-- Formulario de búsqueda -->
+        <form method="POST" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="buscar" class="form-control" placeholder="Buscar conductor" value="<?php echo htmlspecialchars($terminoBusqueda); ?>">
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-secondary">Buscar</button>
+                </div>
+            </div>
+        </form>
 
         <div class="text-end mb-3">
             <a href="nueva_asignacion.php" class="btn btn-primary">Nueva Asignación</a>

@@ -54,5 +54,42 @@ class AsignacionControlador {
 
         $stmt->close();
     }
+
+    public function buscarAsignaciones($terminoBusqueda) {
+        $conn = Conexion::conectar();
+        $sql = "SELECT 
+                   a.id_asignacion, 
+                   c.nombre_completo, 
+                   v.modelo, 
+                   v.numero_placa, 
+                   a.fecha_inicio, 
+                   a.fecha_fin, 
+                   a.estado
+               FROM asignaciones_vehiculos a
+               INNER JOIN conductores c ON a.id_conductor = c.id_conductor
+               INNER JOIN vehiculos v ON a.id_vehiculo = v.id_vehiculo
+               WHERE a.id_asignacion LIKE ? OR
+                     c.nombre_completo LIKE ? OR
+                     v.modelo LIKE ? OR
+                     v.numero_placa LIKE ? OR
+                     a.estado LIKE ?";
+        
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            die('Error en la consulta: ' . $conn->error);
+        }
+    
+        // Definir el término de búsqueda
+        $termino = '%' . $terminoBusqueda . '%';
+    
+        // Asociar los parámetros
+        $stmt->bind_param("sssss", $termino, $termino, $termino, $termino, $termino);
+    
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        return $resultado;
+    }
+    
+    
 }
 ?>

@@ -57,26 +57,32 @@ if ($resultado === false) {
             // Verificar si hay resultados antes de procesarlos
             if ($resultado && $resultado->num_rows > 0) {
                 while ($fila = $resultado->fetch_assoc()) {
-                    // Mostrar cada conductor
+                    // Obtener el ID del conductor
+                    $idConductor = $fila['id_conductor'];
+
+                    // Mostrar cada conductor con enlace al formulario de actualización
                     echo '<div class="col-md-4">
-                            <div class="card p-3 mb-3">
-                                <div class="text-center">
-                                    <img src="' . (empty($fila['foto']) ? "../assets/img/default-driver.png" : "../uploads/" . htmlspecialchars($fila['foto'])) . '" class="img-fluid rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;" alt="Foto del conductor">
+                            <a href="actualizar_conductor.php?id_conductor=' . $idConductor . '" class="text-decoration-none">
+                                <div class="card p-3 mb-3">
+                                    <div class="text-center">
+                                        <img src="' . (empty($fila['foto']) ? "../assets/img/default-driver.png" : "../MODELO/assets/conductores/" . htmlspecialchars($fila['foto'])) . '" class="img-fluid rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;" alt="Foto del conductor">
+                                    </div>
+                                    <h5 class="text-center">
+                                        🚚 ' . htmlspecialchars($fila['nombre_completo']) . '
+                                        <span class="badge bg-' . ($fila['estado'] == 'disponible' ? 'success' : 'warning') . '">
+                                            ' . htmlspecialchars($fila['estado']) . '
+                                        </span>
+                                    </h5>
+                                    <p><strong>N° Licencia:</strong> ' . htmlspecialchars($fila['numero_licencia']) . '</p>
+                                    <p><strong>Tipo de Licencia:</strong> ' . htmlspecialchars($fila['tipo_licencia']) . '</p>
                                 </div>
-                                <h5 class="text-center">
-                                    🚚 ' . htmlspecialchars($fila['nombre_completo']) . '
-                                    <span class="badge bg-' . ($fila['estado'] == 'disponible' ? 'success' : 'warning') . '">
-                                        ' . htmlspecialchars($fila['estado']) . '
-                                    </span>
-                                </h5>
-                                <p><strong>N° Licencia:</strong> ' . htmlspecialchars($fila['numero_licencia']) . '</p>
-                                <p><strong>Tipo de Licencia:</strong> ' . htmlspecialchars($fila['tipo_licencia']) . '</p>
-                            </div>
+                            </a>
                         </div>';
                 }
             } else {
                 echo "<p>No se encontraron conductores.</p>";
             }
+            
             ?>
         </div>
     </div>

@@ -20,6 +20,7 @@ class AsignacionModelo {
         $resultado = $this->conn->query($sql);
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
+    
 
 
 }

@@ -11,12 +11,13 @@ class Conductor {
 
     // Método para buscar conductores de manera flexible
     public function buscarConductores($terminoBusqueda) {
-        $sql = "SELECT nombre_completo, numero_licencia, tipo_licencia, estado, foto FROM conductores
-                WHERE nombre_completo LIKE ? OR 
+        $sql = "SELECT id_conductor,nombre_completo, numero_licencia, tipo_licencia, estado, foto FROM conductores
+                WHERE id_conductor LIKE ? OR
+                 nombre_completo LIKE ? OR 
                       numero_licencia LIKE ? OR 
                       tipo_licencia LIKE ? OR 
                       estado LIKE ?";
-        
+            echo "<!-- SQL Ejecutado: $sql -->"; // 🔍 Verificar consulta
         $stmt = $this->conn->prepare($sql);
         if ($stmt === false) {
             // Si hay un error en la preparación de la consulta
@@ -24,7 +25,7 @@ class Conductor {
         }
 
         $termino = '%' . $terminoBusqueda . '%';
-        $stmt->bind_param("ssss", $termino, $termino, $termino, $termino);
+        $stmt->bind_param("sssss", $termino, $termino, $termino, $termino,$termino);
 
         $stmt->execute();
         
