@@ -58,55 +58,6 @@ CREATE TABLE conductores (
     foto VARCHAR(15),
     estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible'
 );
-<<<<<<< HEAD
---Registrar conductores para    
-DELIMITER $$
-
-CREATE PROCEDURE registrar_conductor(
-    IN nombre_completo VARCHAR(255),
-    IN numero_licencia VARCHAR(50),
-    IN tipo_licencia VARCHAR(50),
-    IN fecha_vencimiento_licencia DATE,
-    IN telefono VARCHAR(20),
-    IN estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
-    IN foto VARCHAR(255)
-)
-BEGIN
-    INSERT INTO conductores (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto)
-    VALUES (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto);
-END $$
-
-DELIMITER ;
-
-DELIMITER $$
---Actualizar conductor
-CREATE PROCEDURE actualizar_conductor(
-    IN p_id_conductor INT,
-    IN p_nombre_completo VARCHAR(255),
-    IN p_numero_licencia VARCHAR(50),
-    IN p_tipo_licencia VARCHAR(50),
-    IN p_fecha_vencimiento_licencia DATE,
-    IN p_telefono VARCHAR(20),
-    IN p_estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
-    IN p_foto VARCHAR(255)
-)
-BEGIN
-    UPDATE conductores 
-    SET 
-        nombre_completo = p_nombre_completo,
-        numero_licencia = p_numero_licencia,
-        tipo_licencia = p_tipo_licencia,
-        fecha_vencimiento_licencia = p_fecha_vencimiento_licencia,
-        telefono = p_telefono,
-        estado = p_estado,
-        foto = p_foto
-    WHERE id_conductor = p_id_conductor;
-END $$
-
-DELIMITER ;
-
-=======
->>>>>>> c2bfcac47208a4ed0bb3c94c6d0d530405f6f482
 
 -- Tabla de Vehículos
 CREATE TABLE vehiculos (
@@ -134,7 +85,6 @@ CREATE TABLE asignaciones_vehiculos (
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
 
-<<<<<<< HEAD
 --Actulizar asignaciones_vehiculos (no esta terminado)
 DELIMITER //
 
@@ -159,8 +109,6 @@ END //
 DELIMITER ;
 
 
-=======
->>>>>>> c2bfcac47208a4ed0bb3c94c6d0d530405f6f482
 -- Tabla de Ubicaciones
 CREATE TABLE ubicaciones (
     id_ubicacion INT PRIMARY KEY AUTO_INCREMENT,

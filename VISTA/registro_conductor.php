@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/form-elements.css">
-    <link rel="stylesheet" href="../CONTROLADOR/css/form_style.css">
+    <link rel="stylesheet" href="../CONTROLADOR/css/nueva_asig_conductor.css">
 </head>
 <body>
     <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
