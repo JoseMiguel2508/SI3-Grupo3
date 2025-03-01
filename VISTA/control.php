@@ -66,7 +66,7 @@
 
             // Coordenadas de Santa Cruz y Montero
             var startPoint = L.latLng(-17.7833, -63.1821); // Santa Cruz de la Sierra
-            var endPoint = L.latLng(-17.3412, -63.2500); // Montero
+            var endPoint = L.latLng(-17.99088, -63.381435); // Montero
 
             // Configuración de la ruta con marcadores personalizados
             L.Routing.control({

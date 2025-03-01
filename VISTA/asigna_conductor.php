@@ -15,12 +15,14 @@ $asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Lista de Asignaciones</title>
 </head>
+
 <body>
     <div class="container mt-4">
         <h2 class="text-center">Lista de Asignaciones de Vehículos</h2>
@@ -38,7 +40,7 @@ $asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
         </form>
 
         <div class="text-end mb-3">
-            <a href="nueva_asignacion.php" class="btn btn-primary">Nueva Asignación</a>
+            <a href="nueva_asig_conductor.php" class="btn btn-primary">Nueva Asignación</a>
         </div>
 
         <div class="table-responsive">
@@ -82,4 +84,5 @@ $asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

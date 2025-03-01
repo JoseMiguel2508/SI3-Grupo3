@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $asignacionExitosa = $controlador->asignarVehiculo($id_conductor, $id_vehiculo, $fecha_inicio);
 
     if ($asignacionExitosa) {
-        echo "<script>alert('Vehículo asignado correctamente.'); window.location.href='asignacion.php';</script>";
+        echo "<script>alert('Vehículo asignado correctamente.'); window.location.href='asigna_conductor.php';</script>";
     } else {
         echo "<script>alert('Error al asignar el vehículo.');</script>";
     }
@@ -26,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,8 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/form-elements.css">
-    <link rel="stylesheet" href="../CONTROLADOR/css/form_style.css">
+    <link rel="stylesheet" href="../CONTROLADOR/css/nueva_asig_conductor.css">
 </head>
+
 <body>
     <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
         <div class="panel border bg-white p-3">
@@ -70,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <option value="">Seleccione un vehículo</option>
                                     <?php while ($row = $resultVehiculos->fetch_assoc()) { ?>
                                         <option value="<?= $row['id_vehiculo'] ?>">
-                                            <?= $row['marca'] ?> <?= $row['modelo'] ?> - <?= $row['numero_placa'] ?>
+                                            <?= $row['marca'] ?>     <?= $row['modelo'] ?> - <?= $row['numero_placa'] ?>
                                         </option>
                                     <?php } ?>
                                 </select>
@@ -81,7 +83,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group">
                         <div class="input-field">
                             <span class="fas fa-calendar-alt p-2"></span>
-                            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
+                            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="form-control"
+                                required>
                         </div>
                     </div>
 
@@ -89,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <button type="submit" class="btn btn-primary btn-sm mt-3 px-3">Asignar Vehículo</button>
                     </div>
                     <div class="text-center mt-2">
-                        <a href="asignacion.php" class="btn btn-secondary btn-sm">Cancelar</a>
+                        <a href="asigna_conductor.php" class="btn btn-secondary btn-sm">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -118,4 +121,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </script>
 </body>
+
 </html>

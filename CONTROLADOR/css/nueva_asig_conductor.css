@@ -47,7 +47,7 @@ a:hover {
 
 .btn-primary {
     width: auto; /* Hace que el botón se ajuste al texto */
-    min-width: 120px; /* Ajusta este valor según lo que necesites */
+    min-width: 120px;
     padding: 5px 15px;
     font-size: 14px;
     border-radius: 8px;
