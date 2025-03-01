@@ -28,7 +28,7 @@ if ($resultado === false) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor de Flotas en Ruta</title>
+    <title>Monitor de Flotas en Rutas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../CONTROLADOR/css/control.css">
 </head>
@@ -65,7 +65,7 @@ if ($resultado === false) {
                             <a href="actualizar_conductor.php?id_conductor=' . $idConductor . '" class="text-decoration-none">
                                 <div class="card p-3 mb-3">
                                     <div class="text-center">
-                                        <img src="' . (empty($fila['foto']) ? "../assets/img/default-driver.png" : "../MODELO/assets/conductores/" . htmlspecialchars($fila['foto'])) . '" class="img-fluid rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;" alt="Foto del conductor">
+                                        <img src="' . (empty($fila['foto']) ? "../assets/img/default-driver.png" : "../MODELO/assets/conductores/" .htmlspecialchars($fila['foto'])) . '" class="img-fluid rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;" alt="Foto del conductor">
                                     </div>
                                     <h5 class="text-center">
                                         🚚 ' . htmlspecialchars($fila['nombre_completo']) . '
