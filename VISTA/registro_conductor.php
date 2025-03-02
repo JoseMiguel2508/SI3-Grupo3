@@ -85,7 +85,7 @@
                         <button type="submit" class="btn btn-primary btn-sm mt-3 px-3">Guardar</button>
                     </div>
                     <div class="text-center mt-2">
-                        <a href="conductores.php" class="btn btn-secondary btn-sm">Cancelar</a>
+                        <a href="control_conductor.php" class="btn btn-secondary btn-sm">Cancelar</a>
                     </div>
                 </form>
             </div>
