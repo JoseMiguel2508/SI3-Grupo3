@@ -21,7 +21,7 @@ $asignaciones = $asignacionControlador->obtenerAsignacionesActivas();
         <h2 class="text-center">Lista de Asignaciones de Rutas</h2>
 
         <div class="text-end mb-3">
-            <a href="nueva_asig_conductor.php" class="btn btn-primary">Nueva Asignación</a>
+            <a href="nueva_asig_ruta.php" class="btn btn-danger">Nueva Asignación</a>
         </div>
 
         <div class="table-responsive">

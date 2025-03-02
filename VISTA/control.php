@@ -64,9 +64,9 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // Coordenadas de Santa Cruz y Montero
+
             var startPoint = L.latLng(-17.7833, -63.1821); // Santa Cruz de la Sierra
-            var endPoint = L.latLng(-17.99088, -63.381435); // Montero
+            var endPoint = L.latLng(-16.50000000, -68.15000000); // ubicacion destino
 
             // Configuración de la ruta con marcadores personalizados
             L.Routing.control({

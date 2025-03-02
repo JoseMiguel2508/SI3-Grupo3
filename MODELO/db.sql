@@ -14,39 +14,6 @@ CREATE TABLE usuarios (
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
---------- Insertar Usuario ----------
-DELIMITER $$
-
-CREATE PROCEDURE InsertarUsuario(
-    IN p_nombre_usuario VARCHAR(50),
-    IN p_contrasena VARCHAR(255),
-    IN p_nombre_completo VARCHAR(100),
-    IN p_correo VARCHAR(100)
-)
-BEGIN
-    INSERT INTO usuarios (nombre_usuario, contrasena, nombre_completo, correo, estado)
-    VALUES (p_nombre_usuario, SHA2(p_contrasena, 256), p_nombre_completo, p_correo, 'activo');
-END $$
-
-DELIMITER ;
-
-
--------- validar Loguin ----------
-DELIMITER $$
-
-CREATE PROCEDURE ValidarUsuario(
-    IN p_nombre_usuario VARCHAR(50),
-    IN p_contrasena VARCHAR(255)
-)
-BEGIN
-    SELECT id_usuario, nombre_usuario, nombre_completo, correo, estado
-    FROM usuarios
-    WHERE nombre_usuario = p_nombre_usuario
-      AND contrasena = SHA2(p_contrasena, 256)
-      AND estado = 'activo';
-END $$
-
-DELIMITER ;
 -- Tabla de Conductores (sin vínculo con usuarios)
 CREATE TABLE conductores (
     id_conductor INT PRIMARY KEY AUTO_INCREMENT,
@@ -55,7 +22,7 @@ CREATE TABLE conductores (
     tipo_licencia VARCHAR(20) NOT NULL,
     fecha_vencimiento_licencia DATE NOT NULL,
     telefono VARCHAR(15) NOT NULL,
-    foto VARCHAR(15),
+    foto VARCHAR(150),
     estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo') DEFAULT 'disponible'
 );
 
@@ -68,8 +35,6 @@ CREATE TABLE vehiculos (
     anio INT NOT NULL,
     capacidad DECIMAL(10,2),
     estado ENUM('activo', 'mantenimiento', 'inactivo') DEFAULT 'activo',
-    ultimo_mantenimiento DATE,
-    proximo_mantenimiento DATE,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -84,7 +49,6 @@ CREATE TABLE asignaciones_vehiculos (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
-
 
 
 
@@ -123,9 +87,21 @@ CREATE TABLE rutas (
     punto_inicio VARCHAR(100) NOT NULL,
     punto_fin VARCHAR(100) NOT NULL,
     duracion_estimada INT,
-    estado ENUM('activo', 'inactivo') DEFAULT 'activo',
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    latitud DECIMAL(10,8) NOT NULL,
+    longitud DECIMAL(11,8) NOT NULL
 );
+
+
+INSERT INTO rutas (nombre, descripcion, punto_inicio, punto_fin, duracion_estimada, latitud, longitud) VALUES
+('Santa Cruz - La Paz', 'Ruta desde Santa Cruz hasta La Paz', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de La Paz', 17, -16.50000000, -68.15000000),
+('Santa Cruz - Cochabamba', 'Ruta desde Santa Cruz hasta Cochabamba', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cochabamba', 9, -17.39360000, -66.15730000),
+('Santa Cruz - Sucre', 'Ruta desde Santa Cruz hasta Sucre', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Sucre', 10, -19.03330000, -65.26270000),
+('Santa Cruz - Potosí', 'Ruta desde Santa Cruz hasta Potosí', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Potosí', 12, -19.58360000, -65.75310000),
+('Santa Cruz - Oruro', 'Ruta desde Santa Cruz hasta Oruro', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Oruro', 14, -17.98330000, -67.15000000),
+('Santa Cruz - Tarija', 'Ruta desde Santa Cruz hasta Tarija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Tarija', 15, -21.53550000, -64.72960000),
+('Santa Cruz - Trinidad', 'Ruta desde Santa Cruz hasta Trinidad', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Trinidad', 10, -14.83330000, -64.90000000),
+('Santa Cruz - Cobija', 'Ruta desde Santa Cruz hasta Cobija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cobija', 24, -11.02640000, -68.76920000);
 
 -- Tabla de Asignaciones de Rutas
 CREATE TABLE asignaciones_rutas (
@@ -153,167 +129,5 @@ CREATE TABLE alertas (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo) ON DELETE CASCADE,
     FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
-
--- Agregar columna foto a conductores
-ALTER TABLE conductores
-ADD COLUMN foto VARCHAR(255);
-
--- Eliminar columnas ultima_ubicacion y ultima_actualizacion de vehiculos
-ALTER TABLE vehiculos
-DROP COLUMN ultimo_mantenimiento,
-DROP COLUMN proximo_mantenimiento;
-
-----///////PROCEDURES///////----
-
---------- Registrar Conductor ----------
-DELIMITER $$
-
-CREATE PROCEDURE registrar_conductor(
-    IN nombre_completo VARCHAR(255),
-    IN numero_licencia VARCHAR(50),
-    IN tipo_licencia VARCHAR(50),
-    IN fecha_vencimiento_licencia DATE,
-    IN telefono VARCHAR(20),
-    IN estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
-    IN foto VARCHAR(255)
-)
-BEGIN
-    INSERT INTO conductores (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto)
-    VALUES (nombre_completo, numero_licencia, tipo_licencia, fecha_vencimiento_licencia, telefono, estado, foto);
-END $$
-
-DELIMITER ;
-
---actualizar_conductor
-DELIMITER $$
-
-CREATE PROCEDURE actualizar_conductor(
-    IN p_id_conductor INT,
-    IN p_nombre_completo VARCHAR(255),
-    IN p_numero_licencia VARCHAR(50),
-    IN p_tipo_licencia VARCHAR(50),
-    IN p_fecha_vencimiento_licencia DATE,
-    IN p_telefono VARCHAR(20),
-    IN p_estado ENUM('disponible', 'en_ruta', 'fuera_servicio', 'inactivo'),
-    IN p_foto VARCHAR(255)
-)
-BEGIN
-    UPDATE conductores 
-    SET 
-        nombre_completo = p_nombre_completo,
-        numero_licencia = p_numero_licencia,
-        tipo_licencia = p_tipo_licencia,
-        fecha_vencimiento_licencia = p_fecha_vencimiento_licencia,
-        telefono = p_telefono,
-        estado = p_estado,
-        foto = p_foto
-    WHERE id_conductor = p_id_conductor;
-END$$
-
-DELIMITER ;
---------- Insertar Usuario ----------
-DELIMITER $$
-
-CREATE PROCEDURE InsertarUsuario(
-    IN p_nombre_usuario VARCHAR(50),
-    IN p_contrasena VARCHAR(255),
-    IN p_nombre_completo VARCHAR(100),
-    IN p_correo VARCHAR(100)
-)
-BEGIN
-    INSERT INTO usuarios (nombre_usuario, contrasena, nombre_completo, correo, estado)
-    VALUES (p_nombre_usuario, SHA2(p_contrasena, 256), p_nombre_completo, p_correo, 'activo');
-END $$
-
-DELIMITER ;
-
--------- Validar Login ----------
-DELIMITER $$
-
-CREATE PROCEDURE ValidarUsuario(
-    IN p_nombre_usuario VARCHAR(50),
-    IN p_contrasena VARCHAR(255)
-)
-BEGIN
-    SELECT id_usuario, nombre_usuario, nombre_completo, correo, estado
-    FROM usuarios
-    WHERE nombre_usuario = p_nombre_usuario
-      AND contrasena = SHA2(p_contrasena, 256)
-      AND estado = 'activo';
-END $$
-
-DELIMITER ;
-
--------- Registrar Vehiculo ----------
-DELIMITER $$
-
-CREATE PROCEDURE RegistrarVehiculo(
-    IN p_numero_placa VARCHAR(20),
-    IN p_marca VARCHAR(50),
-    IN p_modelo VARCHAR(50),
-    IN p_anio INT,
-    IN p_capacidad DECIMAL(10,2),
-    IN p_estado ENUM('activo', 'mantenimiento', 'inactivo')
-)
-BEGIN
-    -- Validar que la placa sea única
-    IF EXISTS (SELECT 1 FROM vehiculos WHERE numero_placa = p_numero_placa) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La placa ya está registrada';
-    ELSE
-        -- Insertar el nuevo vehículo
-        INSERT INTO vehiculos (numero_placa, marca, modelo, anio, capacidad, estado)
-        VALUES (p_numero_placa, p_marca, p_modelo, p_anio, p_capacidad, p_estado);
-        
-        -- Confirmar registro exitoso
-        SELECT 'Registro exitoso' AS mensaje;
-    END IF;
-END $$
-
-DELIMITER ;
-
--------- Editar resgistro de vehiculo ----------
-DELIMITER $$
-
-CREATE PROCEDURE EditarVehiculo(
-    IN p_id_vehiculo INT,
-    IN p_numero_placa VARCHAR(20),
-    IN p_marca VARCHAR(50),
-    IN p_modelo VARCHAR(50),
-    IN p_anio INT,
-    IN p_capacidad DECIMAL(10,2),
-    IN p_estado ENUM('activo', 'mantenimiento', 'inactivo')
-)
-BEGIN
-    -- Validar que la placa sea única, excepto para el vehículo que se está editando
-    IF EXISTS (SELECT 1 FROM vehiculos WHERE numero_placa = p_numero_placa AND id_vehiculo != p_id_vehiculo) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La placa ya está registrada para otro vehículo';
-    ELSE
-        -- Actualizar el vehículo
-        UPDATE vehiculos
-        SET numero_placa = p_numero_placa,
-            marca = p_marca,
-            modelo = p_modelo,
-            anio = p_anio,
-            capacidad = p_capacidad,
-            estado = p_estado
-        WHERE id_vehiculo = p_id_vehiculo;
-        
-        -- Confirmar actualización exitosa
-        SELECT 'Actualización exitosa' AS mensaje;
-    END IF;
-END $$
-
-DELIMITER ;
-
--------- Listar vehiculos ----------
-DELIMITER $$
-
-CREATE PROCEDURE ListarVehiculos()
-BEGIN
-    SELECT id_vehiculo, numero_placa, marca, modelo, anio, capacidad, estado, fecha_registro
-    FROM vehiculos;
-END $$
-
-DELIMITER ;
 
 

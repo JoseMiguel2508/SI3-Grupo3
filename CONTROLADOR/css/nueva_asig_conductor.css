@@ -112,6 +112,7 @@ a[target='_blank'] {
     padding: 0px 8px
 }
 
+
 @media(max-width: 360px) {
     #forgot {
         margin-left: 0;
