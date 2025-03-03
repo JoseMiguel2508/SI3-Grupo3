@@ -150,3 +150,89 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+-------Listar Rutas---------
+DELIMITER //
+
+CREATE PROCEDURE ObtenerRutas()
+BEGIN
+    SELECT id_ruta, nombre FROM rutas;
+END //
+
+DELIMITER ;
+
+-------Listar Vehiculos sin Asignacion de Ruta---------
+DELIMITER //
+
+CREATE PROCEDURE ObtenerVehiculosSinRuta()
+BEGIN
+    SELECT 
+        a.id_asignacion,
+        a.id_vehiculo,
+        v.marca, 
+        v.modelo, 
+        v.numero_placa, 
+        c.nombre_completo AS nombre_conductor
+    FROM asignaciones_vehiculos a
+    INNER JOIN vehiculos v ON a.id_vehiculo = v.id_vehiculo
+    INNER JOIN conductores c ON a.id_conductor = c.id_conductor
+    WHERE a.estado = 'activo'
+    AND NOT EXISTS (
+        SELECT 1 FROM asignaciones_rutas ar WHERE ar.id_asignacion_Vehiculo = a.id_asignacion
+    );
+END //
+
+DELIMITER ;
+
+-------Insertar Asignacion---------
+DELIMITER //
+
+CREATE PROCEDURE InsertarAsignacionRuta(
+    IN p_id_ruta INT,
+    IN p_id_asignacion_Vehiculo INT,
+    IN p_hora_inicio TIME,
+    IN p_hora_fin TIME,
+    IN p_estado VARCHAR(20)
+)
+BEGIN
+    INSERT INTO asignaciones_rutas (id_ruta, id_asignacion_Vehiculo, hora_inicio, hora_fin, estado) 
+    VALUES (p_id_ruta, p_id_asignacion_Vehiculo, p_hora_inicio, p_hora_fin, p_estado);
+END //
+
+DELIMITER ;
+
+-------Listar Asignacion---------
+DELIMITER //
+
+CREATE PROCEDURE ObtenerAsignacionesRutas()
+BEGIN
+    SELECT 
+        a.id_asignacion, 
+        v.modelo, 
+        v.numero_placa, 
+        c.nombre_completo, 
+        a.hora_inicio, 
+        a.hora_fin, 
+        r.nombre AS nombre_ruta, 
+        a.estado
+    FROM asignaciones_rutas a
+    INNER JOIN asignaciones_vehiculos av ON a.id_asignacion_vehiculo = av.id_asignacion
+    INNER JOIN rutas r ON a.id_ruta = r.id_ruta
+    INNER JOIN vehiculos v ON av.id_vehiculo = v.id_vehiculo
+    INNER JOIN conductores c ON av.id_conductor = c.id_conductor;
+END //
+
+DELIMITER ;
+
+
+-------Eliminar Asignacion---------
+DELIMITER //
+
+CREATE PROCEDURE EliminarAsignacionRuta(
+    IN p_id_asignacion INT
+)
+BEGIN
+    DELETE FROM asignaciones_rutas WHERE id_asignacion = p_id_asignacion;
+END //
+
+DELIMITER ;

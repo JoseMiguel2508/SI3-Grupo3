@@ -1,30 +1,14 @@
 <?php
-require_once '../MODELO/AsignacionModeloRuta.php';
+
 require_once '../MODELO/conex_consulta.php'; // Para la conexión a la base de datos
 
 class AsignacionRutaControlador
 {
-    private $modelo;
-
-    public function __construct()
-    {
-        $this->modelo = new AsignacionModeloRuta();
-    }
-
-    // Obtener asignaciones activas
-    public function obtenerAsignacionesActivas()
-    {
-        return $this->modelo->obtenerAsignacionesActivas();
-    }
-
-    // Obtener lista de conductores disponibles (sin vehículo asignado)
-    public function obtenerConductoresDisponibles()
+    // Obtener lista de rutas
+    public function obtenerRutas()
     {
         $conn = Conexion::conectar();
-        $sql = "SELECT id_conductor, nombre_completo 
-                FROM conductores 
-                WHERE estado = 'disponible' 
-                AND id_conductor NOT IN (SELECT id_conductor FROM asignaciones_vehiculos WHERE estado = 'activo')";
+        $sql = "CALL ObtenerRutas()";
         return $conn->query($sql);
     }
 
@@ -32,25 +16,22 @@ class AsignacionRutaControlador
     public function obtenerVehiculosDisponibles()
     {
         $conn = Conexion::conectar();
-        $sql = "SELECT id_vehiculo, marca, modelo, numero_placa 
-                FROM vehiculos 
-                WHERE estado = 'activo' 
-                AND id_vehiculo NOT IN (SELECT id_vehiculo FROM asignaciones_vehiculos WHERE estado = 'activo')";
+        $sql = "CALL ObtenerVehiculosSinRuta()";
         return $conn->query($sql);
     }
 
     // Asignar un vehículo a un conductor
-    public function asignarVehiculo($idConductor, $idVehiculo, $fechaInicio)
+    public function asignarRuta($id_Ruta, $idasignacionVehiculo, $fechaInicio, $fechaFin, $estado)
     {
         $conn = Conexion::conectar();
         $fechaInicio = date("Y-m-d H:i:s", strtotime($fechaInicio)); // Formateamos la fecha correctamente
+        $fechaFin = date("Y-m-d H:i:s", strtotime($fechaInicio));
 
         // Insertar la asignación en la base de datos
-        $sql = "INSERT INTO asignaciones_vehiculos (id_conductor, id_vehiculo, fecha_inicio, estado) 
-                VALUES (?, ?, ?, 'activo')";
+        $sql = "CALL InsertarAsignacionRuta(?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iis", $idConductor, $idVehiculo, $fechaInicio);
+        $stmt->bind_param("iisss", $id_Ruta, $idasignacionVehiculo, $fechaInicio, $fechaFin, $estado);
 
         if ($stmt->execute()) {
             return true; // Retorna éxito
@@ -60,5 +41,28 @@ class AsignacionRutaControlador
 
         $stmt->close();
     }
+
+
+    public function obtenerAsignacionesActivas()
+    {
+        $conn = Conexion::conectar();
+        $sql = "CALL ObtenerAsignacionesRutas()";
+    
+        $resultado = $conn->query($sql);
+    
+        // Verificar si hay resultados y convertir a un array
+        return ($resultado && $resultado->num_rows > 0) ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
+    }
+    public function eliminarRuta($id_asignacion)
+    {
+        $conn = Conexion::conectar();
+        $sql = "CALL EliminarAsignacionRuta(?)";
+    
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_asignacion);
+
+        return $stmt->execute();
+    }
+
 }
 ?>

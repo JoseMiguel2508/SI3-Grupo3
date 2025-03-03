@@ -57,7 +57,7 @@ $con->close();
         // Redirigir después de 3 segundos
         setTimeout(function() {
             window.location.href = "../VISTA/main_vehiculo.php";
-        }, 3000);
+        }, 2500);
     </script>
     <!-- Incluir Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
