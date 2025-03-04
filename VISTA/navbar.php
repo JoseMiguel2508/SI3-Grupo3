@@ -51,7 +51,7 @@
         </div>
 
         <div id="contenido" class="text-center border p-3" style="width: 100%; max-width: 100%;">
-            <iframe id="contenido-frame" src="cards.html" style="width: 100%; height: 400px; border: none;"></iframe>
+            <iframe id="contenido-frame" src="cards.html" style="width: 100%; height: 500px; border: none;"></iframe>
         </div>
     </div>
 

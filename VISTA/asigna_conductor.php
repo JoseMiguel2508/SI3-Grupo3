@@ -11,18 +11,26 @@ $terminoBusqueda = isset($_POST['buscar']) ? $_POST['buscar'] : '';
 $asignaciones = $asignacionControlador->obtenerAsignacionesActivas($terminoBusqueda);
 $asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
 
+// Verificar si se solicitó dar de baja
+if (isset($_GET['dar_baja_id'])) {
+    $idAsignacion = $_GET['dar_baja_id'];
+    $resultado = $asignacionControlador->darDeBajaAsignacion($idAsignacion);
+    if ($resultado) {
+        // Redirigir para evitar el resubmit de formulario y actualizar la lista
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Lista de Asignaciones</title>
 </head>
-
 <body>
     <div class="container mt-4">
         <h2 class="text-center">Lista de Asignaciones de Vehículos</h2>
@@ -54,24 +62,35 @@ $asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
                         <th>Fecha de Inicio</th>
                         <th>Fecha de Fin</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($asignaciones)) {
                         foreach ($asignaciones as $asignacion) { ?>
-                            <tr>
+                            <tr <?= $asignacion["estado"] === "dada de baja" ? 'class="table-danger"' : '' ?>>
                                 <td><?= $asignacion["id_asignacion"] ?></td>
                                 <td><?= $asignacion["nombre_completo"] ?></td>
                                 <td><?= $asignacion["modelo"] ?></td>
                                 <td><?= $asignacion["numero_placa"] ?></td>
                                 <td><?= $asignacion["fecha_inicio"] ?></td>
-                                <td><?= $asignacion["fecha_fin"] ? $asignacion["fecha_fin"] : "En curso" ?></td>
+                                <td>
+                                    <?php 
+                                    // Si tiene fecha de fin, mostrarla; si no, indicar "En curso"
+                                    echo $asignacion["fecha_fin"] ? $asignacion["fecha_fin"] : "En curso"; 
+                                    ?>
+                                </td>
                                 <td><?= ucfirst($asignacion["estado"]) ?></td>
+                                <td>
+                                    <?php if ($asignacion["estado"] !== "dada de baja") { ?>
+                                        <a href="?dar_baja_id=<?= $asignacion["id_asignacion"] ?>" class="btn btn-danger btn-sm">Dar de baja</a>
+                                    <?php } ?>
+                                </td>
                             </tr>
                         <?php }
                     } else { ?>
                         <tr>
-                            <td colspan="7" class="text-center">No hay asignaciones activas</td>
+                            <td colspan="8" class="text-center">No hay asignaciones activas</td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -84,5 +103,4 @@ $asignaciones = $asignacionControlador->buscarAsignaciones($terminoBusqueda);
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
