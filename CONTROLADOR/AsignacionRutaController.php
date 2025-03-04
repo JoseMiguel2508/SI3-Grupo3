@@ -53,6 +53,35 @@ class AsignacionRutaControlador
         // Verificar si hay resultados y convertir a un array
         return ($resultado && $resultado->num_rows > 0) ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     }
+
+
+    public function cambiarEstado($idAsignacion) {
+        $conn = Conexion::conectar();
+    
+        // Actualizar la asignación como "cancelado" y colocar la fecha de fin
+        $sql = "UPDATE asignaciones_rutas 
+                SET estado = 'en_proceso'
+                WHERE id_asignacion = ?";
+    
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idAsignacion);
+        if ($stmt->execute()) {
+            //$stmt->close();
+            //$conn->close();
+            return true; // Retorna éxito
+            
+        } else {
+            //$stmt->close();
+            //$conn->close();
+            return false; // Retorna error
+        }
+        
+    }
+
+
+
+
+
     public function eliminarRuta($id_asignacion)
     {
         $conn = Conexion::conectar();

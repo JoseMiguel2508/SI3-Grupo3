@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <select id="id_asignacion" name="id_asignacion" class="form-control" required>
                                     <option value="">Seleccione un vehículo</option>
                                     <?php while ($row = $resultVehiculos->fetch_assoc()) { ?>
-                                        <option value="<?= $row['id_vehiculo'] ?>">
+                                        <option value="<?= $row['id_asignacion'] ?>">
                                             <?= $row['marca'] ?> - <?= $row['numero_placa'] ?> -
                                             <?= $row['nombre_conductor'] ?>
                                         </option>
@@ -111,8 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <option value="">Seleccione un Estado</option>
                             <option value="pendiente">Pendiente</option>
                             <option value="en_proceso">En proceso</option>
-                            <option value="completado">Completado</option>
-                            <option value="cancelado">Cancelado</option>
+                            <!-- <option value="completado">Completado</option>
+                            <option value="cancelado">Cancelado</option> -->
                         </select>
                     </div>
 
