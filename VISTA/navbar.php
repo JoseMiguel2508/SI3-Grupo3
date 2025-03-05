@@ -48,6 +48,10 @@
                 <input name="radio" type="radio" onclick="mostrarContenido('lista_mantenimiento.php')"/>
                 <span class="name">Mantenimientos</span>
             </label>
+            <label class="radio">
+                <input name="radio" type="radio" onclick="mostrarContenido('aaa.php')"/>
+                <span class="name">Alertas</span>
+            </label>
         </div>
 
         <div id="contenido" class="text-center border p-3" style="width: 100%; max-width: 100%;">

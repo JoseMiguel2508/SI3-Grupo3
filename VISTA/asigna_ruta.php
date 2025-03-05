@@ -10,10 +10,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["id_asignacion"])) {
     $id_asignacion = intval($_POST["id_asignacion"]);
 
     $resultado = $asignacionRuta->eliminarRuta($id_asignacion);
-    
+
     header('Content-Type: application/json');
     echo json_encode(["success" => $resultado]);
     exit;
+}
+
+// Verificar si se solicitó dar de baja
+if (isset($_GET['dar_baja_id'])) {
+    $idAsignacion = $_GET['dar_baja_id'];
+    $result = $asignacionRuta->cambiarEstado($idAsignacion);
+    if ($result) {
+        // Redirigir para evitar el resubmit de formulario y actualizar la lista
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    }
 }
 
 ?>
@@ -63,7 +74,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["id_asignacion"])) {
                                 <td><?= htmlspecialchars($asignacion["numero_placa"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($asignacion["hora_inicio"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($asignacion["hora_fin"], ENT_QUOTES, 'UTF-8') ?></td>
-                                <td><?= htmlspecialchars($asignacion["estado"], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td>
+                                    <?php if ($asignacion["estado"] !== "dada de baja") { ?>
+                                        <a href="?dar_baja_id=<?= $asignacion["id_asignacion"] ?>" class="btn btn-danger btn-sm"><?= htmlspecialchars($asignacion["estado"], ENT_QUOTES, 'UTF-8') ?></a>
+                                    <?php } ?>
+                                </td>
                                 <td>
                                     <button class="button" onclick="eliminarRuta(<?= (int) $asignacion['id_asignacion'] ?>)">
                                         <span class="button-content">Desestimar</span>
