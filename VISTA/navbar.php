@@ -45,7 +45,7 @@
                 <span class="name">Asignacion Conductor</span>
             </label>
             <label class="radio">
-                <input name="radio" type="radio" onclick="mostrarContenido('qqqq.php')"/>
+                <input name="radio" type="radio" onclick="mostrarContenido('lista_mantenimiento.php')"/>
                 <span class="name">Mantenimientos</span>
             </label>
         </div>

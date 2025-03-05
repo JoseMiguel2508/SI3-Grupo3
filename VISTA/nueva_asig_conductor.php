@@ -1,12 +1,13 @@
 <?php
 require_once '../CONTROLADOR/AsignacionControlador.php';
-
+require_once '../MODELO/MantenimientoModelo.php';
+$modelo = new MantenimientoModelo();
 $controlador = new AsignacionControlador();
 
 // Obtener los conductores y vehículos disponibles
 $resultConductores = $controlador->obtenerConductoresDisponibles();
 $resultVehiculos = $controlador->obtenerVehiculosDisponibles();
-
+$resultVehiculos = $modelo->obtenerVehiculosDisponibles(); // Nueva función en el modelo
 // Si el formulario se envió
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_conductor = $_POST["id_conductor"];

@@ -14,7 +14,8 @@ class MantenimientoControlador {
 
     public function obtenerVehiculos() {
         return $this->modelo->obtenerVehiculos();
-    }public function registrarMantenimiento($data) {
+    }
+    public function registrarMantenimiento($data) {
         // Aquí se asume que el modelo ya tiene la lógica para insertar el mantenimiento.
         $exito = $this->modelo->registrarMantenimiento(
             $data['id_vehiculo'],
@@ -24,8 +25,8 @@ class MantenimientoControlador {
             $data['fecha_servicio'],
             $data['fecha_proximo_servicio'],
             $data['estado'],
-            $data['notas'],
             $data['creado_por']
+
         );
         
         if ($exito) {
@@ -69,9 +70,11 @@ class MantenimientoControlador {
 }
 
 $controlador = new MantenimientoControlador();
+$notas = new MantenimientoControlador();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Registrar el mantenimiento y obtener el mensaje de éxito o error
     $controlador->registrarMantenimiento($_POST);
+
 }
 ?>

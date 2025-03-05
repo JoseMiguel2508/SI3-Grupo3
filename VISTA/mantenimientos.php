@@ -64,10 +64,6 @@ $vehiculos = $controlador->obtenerVehiculos();
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Nota</label>
-                    <textarea name="notas" class="form-control" rows="2" required></textarea>
-                </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Fecha Servicio</label>

@@ -12,6 +12,18 @@
     <div class="container mt-4">
         <h2 class="text-center">Lista de Mantenimientos</h2>
 
+        <!-- Formulario de búsqueda -->
+        <form method="POST" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="buscar" class="form-control" placeholder="Buscar mantenimiento" value="<?php echo htmlspecialchars($terminoBusqueda ?? ''); ?>">
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-secondary">Buscar</button>
+                </div>
+            </div>
+        </form>
+
         <div class="text-end mb-3">
             <a href="../VISTA/mantenimientos.php" class="btn btn-primary">Nuevo Mantenimiento</a>
         </div>
@@ -36,9 +48,16 @@
                     // Crear instancia de MantenimientoModelo
                     require_once '../MODELO/MantenimientoModelo.php';
                     $modelo = new MantenimientoModelo();
-                    $mantenimientos = $modelo->obtenerMantenimientos();
 
-                    // Verificar si se ha enviado el formulario
+                    // Verificar si se ha enviado el formulario de búsqueda
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buscar'])) {
+                        $terminoBusqueda = $_POST['buscar'];
+                        $mantenimientos = $modelo->buscarMantenimientos($terminoBusqueda);
+                    } else {
+                        $mantenimientos = $modelo->obtenerMantenimientos();
+                    }
+
+                    // Verificar si se ha enviado el formulario para actualizar el estado
                     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_mantenimiento'])) {
                         $id_mantenimiento = $_POST['id_mantenimiento'];
 
@@ -48,7 +67,7 @@
 
                     if ($mantenimientos->num_rows > 0) {
                         // Mostrar los datos en la tabla
-                        while($row = $mantenimientos->fetch_assoc()) {
+                        while ($row = $mantenimientos->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $row["id_mantenimiento"] . "</td>";
                             echo "<td>" . $row["marca"] . "</td>";
