@@ -76,7 +76,7 @@ BEGIN
         estado = p_estado,
         foto = p_foto
     WHERE id_conductor = p_id_conductor;
-END$$
+END
 
 DELIMITER ;
 -------- Registrar Vehiculo ----------
@@ -102,7 +102,7 @@ BEGIN
         -- Confirmar registro exitoso
         SELECT 'Registro exitoso' AS mensaje;
     END IF;
-END $$
+END
 
 DELIMITER ;
 
@@ -136,7 +136,7 @@ BEGIN
         -- Confirmar actualización exitosa
         SELECT 'Actualización exitosa' AS mensaje;
     END IF;
-END $$
+END 
 
 DELIMITER ;
 
@@ -147,7 +147,7 @@ CREATE PROCEDURE ListarVehiculos()
 BEGIN
     SELECT id_vehiculo, numero_placa, marca, modelo, anio, capacidad, estado, fecha_registro
     FROM vehiculos;
-END $$
+END
 
 DELIMITER ;
 
@@ -157,7 +157,7 @@ DELIMITER //
 CREATE PROCEDURE ObtenerRutas()
 BEGIN
     SELECT id_ruta, nombre FROM rutas;
-END //
+END 
 
 DELIMITER ;
 
@@ -180,7 +180,7 @@ BEGIN
     AND NOT EXISTS (
         SELECT 1 FROM asignaciones_rutas ar WHERE ar.id_asignacion_Vehiculo = a.id_asignacion
     );
-END //
+END 
 
 DELIMITER ;
 
@@ -233,6 +233,6 @@ CREATE PROCEDURE EliminarAsignacionRuta(
 )
 BEGIN
     DELETE FROM asignaciones_rutas WHERE id_asignacion = p_id_asignacion;
-END //
+END
 
 DELIMITER ;
