@@ -147,6 +147,7 @@ $listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
                     }
 
                     var newLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * progress;
+                    
                     var newLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * progress;
 
                     vehicleMarker.setLatLng([newLat, newLng]);

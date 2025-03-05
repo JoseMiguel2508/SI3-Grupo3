@@ -221,14 +221,9 @@ BEGIN
     INNER JOIN asignaciones_vehiculos av ON a.id_asignacion_vehiculo = av.id_asignacion
     INNER JOIN rutas r ON a.id_ruta = r.id_ruta
     INNER JOIN vehiculos v ON av.id_vehiculo = v.id_vehiculo
-<<<<<<< HEAD
     INNER JOIN conductores c ON av.id_conductor = c.id_conductor
     order by id_asignacion asc;
 END $$
-=======
-    INNER JOIN conductores c ON av.id_conductor = c.id_conductor;
-END $$
->>>>>>> 6f673a8ea30987a52ff49f2ba92d252145793b55
 
 DELIMITER ;
 
