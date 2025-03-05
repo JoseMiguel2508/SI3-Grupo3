@@ -50,8 +50,6 @@ CREATE TABLE asignaciones_vehiculos (
     FOREIGN KEY (id_conductor) REFERENCES conductores(id_conductor)
 );
 
-
-
 -- Tabla de Ubicaciones
 CREATE TABLE ubicaciones (
     id_ubicacion INT PRIMARY KEY AUTO_INCREMENT,
@@ -77,8 +75,6 @@ CREATE TABLE registros_mantenimiento (
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
     FOREIGN KEY (creado_por) REFERENCES usuarios(id_usuario)
 );
---borren la columna
-ALTER TABLE registros_mantenimiento DROP COLUMN notas;
 
 -- Tabla de Rutas
 CREATE TABLE rutas (
@@ -92,17 +88,6 @@ CREATE TABLE rutas (
     latitud DECIMAL(10,8) NOT NULL,
     longitud DECIMAL(11,8) NOT NULL
 );
-
-
-INSERT INTO rutas (nombre, descripcion, punto_inicio, punto_fin, duracion_estimada, latitud, longitud) VALUES
-('Santa Cruz - La Paz', 'Ruta desde Santa Cruz hasta La Paz', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de La Paz', 17, -16.50000000, -68.15000000),
-('Santa Cruz - Cochabamba', 'Ruta desde Santa Cruz hasta Cochabamba', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cochabamba', 9, -17.39360000, -66.15730000),
-('Santa Cruz - Sucre', 'Ruta desde Santa Cruz hasta Sucre', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Sucre', 10, -19.03330000, -65.26270000),
-('Santa Cruz - Potosí', 'Ruta desde Santa Cruz hasta Potosí', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Potosí', 12, -19.58360000, -65.75310000),
-('Santa Cruz - Oruro', 'Ruta desde Santa Cruz hasta Oruro', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Oruro', 14, -17.98330000, -67.15000000),
-('Santa Cruz - Tarija', 'Ruta desde Santa Cruz hasta Tarija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Tarija', 15, -21.53550000, -64.72960000),
-('Santa Cruz - Trinidad', 'Ruta desde Santa Cruz hasta Trinidad', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Trinidad', 10, -14.83330000, -64.90000000),
-('Santa Cruz - Cobija', 'Ruta desde Santa Cruz hasta Cobija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cobija', 24, -11.02640000, -68.76920000);
 
 -- Tabla de Asignaciones de Rutas
 CREATE TABLE asignaciones_rutas (
@@ -131,4 +116,12 @@ CREATE TABLE alertas (
     FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
 
-
+INSERT INTO rutas (nombre, descripcion, punto_inicio, punto_fin, duracion_estimada, latitud, longitud) VALUES
+('Santa Cruz - La Paz', 'Ruta desde Santa Cruz hasta La Paz', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de La Paz', 17, -16.50000000, -68.15000000),
+('Santa Cruz - Cochabamba', 'Ruta desde Santa Cruz hasta Cochabamba', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cochabamba', 9, -17.39360000, -66.15730000),
+('Santa Cruz - Sucre', 'Ruta desde Santa Cruz hasta Sucre', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Sucre', 10, -19.03330000, -65.26270000),
+('Santa Cruz - Potosí', 'Ruta desde Santa Cruz hasta Potosí', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Potosí', 12, -19.58360000, -65.75310000),
+('Santa Cruz - Oruro', 'Ruta desde Santa Cruz hasta Oruro', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Oruro', 14, -17.98330000, -67.15000000),
+('Santa Cruz - Tarija', 'Ruta desde Santa Cruz hasta Tarija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Tarija', 15, -21.53550000, -64.72960000),
+('Santa Cruz - Trinidad', 'Ruta desde Santa Cruz hasta Trinidad', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Trinidad', 10, -14.83330000, -64.90000000),
+('Santa Cruz - Cobija', 'Ruta desde Santa Cruz hasta Cobija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cobija', 24, -11.02640000, -68.76920000);
