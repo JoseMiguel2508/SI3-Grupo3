@@ -1,4 +1,3 @@
-
 ----///////PROCEDURES///////----
 
 --------- Insertar Usuario ----------
@@ -33,6 +32,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 --------- Registrar Conductor ----------
 DELIMITER $$
 
@@ -52,7 +52,7 @@ END $$
 
 DELIMITER ;
 
---actualizar_conductor
+--------- Actualizar conductor ----------
 DELIMITER $$
 
 CREATE PROCEDURE actualizar_conductor(
@@ -79,6 +79,7 @@ BEGIN
 END
 
 DELIMITER ;
+
 -------- Registrar Vehiculo ----------
 DELIMITER $$
 
@@ -223,7 +224,6 @@ BEGIN
 END //
 
 DELIMITER ;
-
 
 -------Eliminar Asignacion---------
 DELIMITER //
