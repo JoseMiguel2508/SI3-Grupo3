@@ -73,11 +73,12 @@ CREATE TABLE registros_mantenimiento (
     fecha_servicio DATE NOT NULL,
     fecha_proximo_servicio DATE,
     estado ENUM('programado', 'en_proceso', 'completado') DEFAULT 'programado',
-    notas TEXT,
     creado_por INT,
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo),
     FOREIGN KEY (creado_por) REFERENCES usuarios(id_usuario)
 );
+--borren la columna
+ALTER TABLE registros_mantenimiento DROP COLUMN notas;
 
 -- Tabla de Rutas
 CREATE TABLE rutas (

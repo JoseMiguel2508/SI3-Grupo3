@@ -1,4 +1,3 @@
-
 ----///////PROCEDURES///////----
 
 --------- Insertar Usuario ----------
@@ -33,6 +32,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 --------- Registrar Conductor ----------
 DELIMITER $$
 
@@ -52,7 +52,7 @@ END $$
 
 DELIMITER ;
 
---actualizar_conductor
+--------- Actualizar conductor ----------
 DELIMITER $$
 
 CREATE PROCEDURE actualizar_conductor(
@@ -76,9 +76,10 @@ BEGIN
         estado = p_estado,
         foto = p_foto
     WHERE id_conductor = p_id_conductor;
-END$$
+END $$
 
 DELIMITER ;
+
 -------- Registrar Vehiculo ----------
 DELIMITER $$
 
@@ -152,17 +153,17 @@ END $$
 DELIMITER ;
 
 -------Listar Rutas---------
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE ObtenerRutas()
 BEGIN
     SELECT id_ruta, nombre FROM rutas;
-END //
+END $$
 
 DELIMITER ;
 
 -------Listar Vehiculos sin Asignacion de Ruta---------
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE ObtenerVehiculosSinRuta()
 BEGIN
@@ -180,12 +181,12 @@ BEGIN
     AND NOT EXISTS (
         SELECT 1 FROM asignaciones_rutas ar WHERE ar.id_asignacion_Vehiculo = a.id_asignacion
     );
-END //
+END $$
 
 DELIMITER ;
 
 -------Insertar Asignacion---------
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE InsertarAsignacionRuta(
     IN p_id_ruta INT,
@@ -197,12 +198,12 @@ CREATE PROCEDURE InsertarAsignacionRuta(
 BEGIN
     INSERT INTO asignaciones_rutas (id_ruta, id_asignacion_Vehiculo, hora_inicio, hora_fin, estado) 
     VALUES (p_id_ruta, p_id_asignacion_Vehiculo, p_hora_inicio, p_hora_fin, p_estado);
-END //
+END $$
 
 DELIMITER ;
 
 -------Listar Asignacion---------
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE ObtenerAsignacionesRutas()
 BEGIN
@@ -220,28 +221,32 @@ BEGIN
     INNER JOIN asignaciones_vehiculos av ON a.id_asignacion_vehiculo = av.id_asignacion
     INNER JOIN rutas r ON a.id_ruta = r.id_ruta
     INNER JOIN vehiculos v ON av.id_vehiculo = v.id_vehiculo
+<<<<<<< HEAD
     INNER JOIN conductores c ON av.id_conductor = c.id_conductor
     order by id_asignacion asc;
-END //
+END $$
+=======
+    INNER JOIN conductores c ON av.id_conductor = c.id_conductor;
+END $$
+>>>>>>> 6f673a8ea30987a52ff49f2ba92d252145793b55
 
 DELIMITER ;
 
-
 -------Eliminar Asignacion---------
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE EliminarAsignacionRuta(
     IN p_id_asignacion INT
 )
 BEGIN
     DELETE FROM asignaciones_rutas WHERE id_asignacion = p_id_asignacion;
-END //
+END $$
 
 DELIMITER ;
 
 
 -------ListarAsignacionRutas---------
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE ListaVehiculoRuta()
 BEGIN
@@ -263,13 +268,13 @@ BEGIN
     JOIN conductores c ON av.id_conductor = c.id_conductor
     WHERE ar.estado = 'en_proceso'
     ORDER BY ar.id_asignacion ASC;
-END //
+END $$
 
 DELIMITER ;
 
 -------Agregar Ubicacion vehiculo---------
 
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE InsertarUbicacionVehiculo(
     IN p_id_vehiculo INT,
@@ -280,6 +285,6 @@ CREATE PROCEDURE InsertarUbicacionVehiculo(
 BEGIN
     INSERT INTO ubicaciones (id_vehiculo, latitud, longitud, direccion, fecha_hora) 
     VALUES (p_id_vehiculo, p_latitud, p_longitud, p_direccion, NOW());
-END //
+END $$
 
 DELIMITER ;

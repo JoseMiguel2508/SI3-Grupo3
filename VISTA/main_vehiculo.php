@@ -3,9 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../CONTROLADOR/css">
+    <!-- Incluir Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -27,23 +29,25 @@
                         <th>Año</th>
                         <th>Capacidad</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    // Incluir el archivo de conexión
-                    include '../MODELO/conex_consulta.php';
+                    // Incluir el archivo del controlador
+                    require_once '../CONTROLADOR/VehiculoController.php';
 
-                    // Obtener la conexión
-                    $con = Conexion::conectar();
+                    // Establecer la acción a listar
+                    $_POST['accion'] = 'listar';
 
-                    // Obtener los datos de la tabla vehiculos
-                    $sql = "SELECT id_vehiculo, numero_placa, marca, modelo, anio, capacidad, estado FROM vehiculos";
-                    $result = $con->query($sql);
+                    // Llamar al controlador para listar los vehículos
+                    ob_start();
+                    include '../CONTROLADOR/VehiculoController.php';
+                    ob_end_clean();
 
-                    if ($result->num_rows > 0) {
+                    if (isset($vehiculos) && count($vehiculos) > 0) {
                         // Mostrar los datos en la tabla
-                        while($row = $result->fetch_assoc()) {
+                        foreach ($vehiculos as $row) {
                             echo "<tr>";
                             echo "<td>" . $row["id_vehiculo"] . "</td>";
                             echo "<td>" . $row["numero_placa"] . "</td>";
@@ -52,14 +56,12 @@
                             echo "<td>" . $row["anio"] . "</td>";
                             echo "<td>" . $row["capacidad"] . "</td>";
                             echo "<td>" . $row["estado"] . "</td>";
+                            echo "<td><a href='../VISTA/editar_vehiculo.php?id=" . $row["id_vehiculo"] . "' class='btn btn-warning btn-sm'><i class='bi bi-pencil-square'></i></a></td>";
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='7' class='text-center'>No hay vehículos registrados</td></tr>";
+                        echo "<tr><td colspan='8' class='text-center'>No hay vehículos registrados</td></tr>";
                     }
-
-                    // Cerrar la conexión
-                    $con->close();
                     ?>
                 </tbody>
             </table>
