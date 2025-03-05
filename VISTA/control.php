@@ -1,3 +1,12 @@
+<?php
+require_once '../CONTROLADOR/AsignacionRutaController.php';
+
+// Instanciar el controlador
+$asignacionRuta = new AsignacionRutaControlador();
+
+$listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -11,7 +20,7 @@
     <link rel="stylesheet" href="../CONTROLADOR/css/control.css">
     <style>
         #map {
-            height: 400px;
+            height: 500px;
             width: 100%;
         }
     </style>
@@ -22,17 +31,35 @@
         <h2 class="mb-3">Monitor de Flotas en Ruta</h2>
 
         <div class="row">
-            <div class="col-md-4">
-                <div class="card card-status activo p-3">
-                    <h5>🚚 ABC-123 <span class="badge bg-success">En Ruta</span></h5>
-                    <p>Ruta: Santa Cruz de la Sierra → Montero</p>
-                    <div class="progress mb-2">
-                        <div class="progress-bar bg-success" style="width: 60%;"></div>
+            <?php if (!empty($listaAsignaciones)): ?>
+                <?php foreach ($listaAsignaciones as $asignacion): ?>
+                    <div class="col-md-4">
+                        <div class="card card-status activo p-3">
+                            <h5>🚚 <?= htmlspecialchars($asignacion["numero_placa"], ENT_QUOTES, 'UTF-8') ?> <span
+                                    class="badge bg-success">En Ruta</span></h5>
+                            <p><strong>🛣 Ruta:</strong>
+                                <?= htmlspecialchars($asignacion["nombre_ruta"], ENT_QUOTES, 'UTF-8') ?></p>
+                            <p><strong>👨‍✈ Conductor:</strong>
+                                <?= htmlspecialchars($asignacion["nombre_completo"], ENT_QUOTES, 'UTF-8') ?></p>
+                            <p><strong>🚗 Modelo del Vehículo:</strong>
+                                <?= htmlspecialchars($asignacion["modelo"], ENT_QUOTES, 'UTF-8') ?></p>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" style="width: 60%;"></div>
+                            </div>
+                            <p>Último mantenimiento: <?= htmlspecialchars($asignacion["hora_inicio"], ENT_QUOTES, 'UTF-8') ?>
+                            </p>
+                            <button class="btn btn-danger ver-mapa" data-bs-toggle="modal" data-bs-target="#mapModal"
+                                data-end="<?= htmlspecialchars($asignacion["latitud_fin"], ENT_QUOTES, 'UTF-8') ?>,<?= htmlspecialchars($asignacion["longitud_fin"], ENT_QUOTES, 'UTF-8') ?>">
+                                Ver en Mapa
+                            </button>
+                        </div>
                     </div>
-                    <p>Último mantenimiento: 14/2/2024</p>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mapModal">Ver en Mapa</button>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <p class="text-center text-danger fw-bold">No hay asignaciones activas</p>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -41,7 +68,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="mapModalLabel">Ruta de Viaje: Santa Cruz → Montero</h5>
+                    <h5 class="modal-title" id="mapModalLabel">Mapa de la Ruta de Viaje </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -57,36 +84,90 @@
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
     <script>
-        document.getElementById('mapModal').addEventListener('shown.bs.modal', function () {
-            var map = L.map('map').setView([-17.7833, -63.1821], 10); // Vista centrada en Santa Cruz, Bolivia
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById("mapModal");
+            var map, vehicleMarker;
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            modal.addEventListener("shown.bs.modal", function (event) {
+                var button = event.relatedTarget;
+                var end = button.getAttribute("data-end").split(",");
 
+                var startLatLng = L.latLng(-17.789283449574143, -63.16166950140825); // Punto de partida
+                var endLatLng = L.latLng(parseFloat(end[0]), parseFloat(end[1]));   // Destino
+                var vehicleLatLng = L.latLng(-17.790500, -63.160000);  // Posición inicial del vehículo
 
-            var startPoint = L.latLng(-17.7833, -63.1821); // Santa Cruz de la Sierra
-            var endPoint = L.latLng(-16.50000000, -68.15000000); // ubicacion destino
+                // Elimina el contenido del mapa anterior si existe
+                var mapContainer = document.getElementById("map");
+                mapContainer.innerHTML = "";
 
-            // Configuración de la ruta con marcadores personalizados
-            L.Routing.control({
-                waypoints: [startPoint, endPoint],
-                createMarker: function (i, waypoint, n) {
-                    if (i === 0) {
-                        return L.marker(waypoint.latLng, { title: "Salida: Santa Cruz" });
-                    } else if (i === n - 1) {
-                        return L.marker(waypoint.latLng, { title: "Llegada: Montero" });
+                // Inicializar el mapa
+                map = L.map(mapContainer).setView(startLatLng, 10);
+
+                // Agregar capa base
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                // Agregar marcadores
+                L.marker(startLatLng).addTo(map).bindPopup("Punto de Partida").openPopup();
+                L.marker(endLatLng).addTo(map).bindPopup("Punto de Llegada").openPopup();
+
+                // 🔴 Agregar el marcador del vehículo
+                vehicleMarker = L.marker(vehicleLatLng, {
+                    icon: L.icon({
+                        iconUrl: 'https://cdn-icons-png.flaticon.com/512/1483/1483336.png', // Ícono de camión
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    })
+                }).addTo(map).bindPopup("Vehículo en movimiento");
+
+                // 🛣 Dibujar la ruta
+                var routingControl = L.Routing.control({
+                    waypoints: [startLatLng, endLatLng],
+                    createMarker: function (i, waypoint, n) {
+                        return L.marker(waypoint.latLng, {
+                            title: i === 0 ? "Salida" : "Llegada"
+                        });
+                    },
+                    lineOptions: {
+                        styles: [{ color: '#007bff', weight: 5 }]
+                    },
+                    routeWhileDragging: false,
+                    addWaypoints: false,
+                    draggableWaypoints: false,
+                    show: false
+                }).addTo(map);
+
+                // 📍 Simular el movimiento del vehículo cada 3 segundos
+                var progress = 0;
+                var interval = setInterval(function () {
+                    if (progress >= 1) {
+                        clearInterval(interval);
+                        return;
                     }
-                },
-                lineOptions: {
-                    styles: [{ color: '#007bff', weight: 5 }]
-                },
-                routeWhileDragging: false,
-                addWaypoints: false,
-                draggableWaypoints: false,
-                show: false // Oculta las indicaciones de texto
-            }).addTo(map);
+
+                    var newLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * progress;
+                    var newLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * progress;
+
+                    vehicleMarker.setLatLng([newLat, newLng]);
+                    progress += 0.1;  // Incremento de la posición del vehículo
+                }, 3000);
+
+                // Ajustar vista del mapa
+                setTimeout(function () {
+                    map.invalidateSize();
+                    map.fitBounds(L.latLngBounds([startLatLng, endLatLng]));
+                }, 200);
+            });
+
+            // Eliminar el mapa al cerrar el modal
+            modal.addEventListener("hidden.bs.modal", function () {
+                if (map) {
+                    map.remove();
+                }
+            });
         });
+
     </script>
 </body>
 

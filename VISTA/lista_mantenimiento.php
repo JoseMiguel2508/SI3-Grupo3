@@ -13,7 +13,7 @@
         <h2 class="text-center">Lista de Mantenimientos</h2>
 
         <div class="text-end mb-3">
-            <a href="../VISTA/mantenimientos.php" class="btn btn-primary">Nuevo Mantenimiento</a>
+            <a href="../VISTA/mantenimientos.php" class="btn btn-danger">Nuevo Mantenimiento</a>
         </div>
 
         <div class="table-responsive">

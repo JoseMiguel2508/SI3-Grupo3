@@ -13,7 +13,7 @@
         <h2 class="text-center">Lista de Vehículos</h2>
 
         <div class="text-end mb-3">
-            <a href="../VISTA/crear_vehiculo.php" class="btn btn-primary btn-asignacion">Nuevo registro</a>
+            <a href="../VISTA/crear_vehiculo.php" class="btn btn-danger btn-asignacion">Nuevo registro</a>
         </div>
 
         <div class="table-responsive">

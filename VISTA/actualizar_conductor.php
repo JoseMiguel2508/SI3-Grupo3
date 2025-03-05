@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-sm mt-3 px-3">Actualizar</button>
+                        <button type="submit" class="btn btn-danger btn-sm mt-3 px-3">Actualizar</button>
                     </div>
                     <div class="text-center mt-2">
                         <a href="control_conductor.php" class="btn btn-secondary btn-sm">Cancelar</a>

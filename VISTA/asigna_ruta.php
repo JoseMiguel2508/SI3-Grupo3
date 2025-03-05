@@ -17,15 +17,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["id_asignacion"])) {
 }
 
 // Verificar si se solicitó dar de baja
-if (isset($_GET['dar_baja_id'])) {
+if (isset($_GET['dar_baja_id']) && isset($_GET['id_vehiculo'])) {
     $idAsignacion = $_GET['dar_baja_id'];
-    $result = $asignacionRuta->cambiarEstado($idAsignacion);
+    $idVehiculo = $_GET['id_vehiculo'];
+
+    $result = $asignacionRuta->cambiarEstado($idVehiculo, $idAsignacion);
+    
     if ($result) {
-        // Redirigir para evitar el resubmit de formulario y actualizar la lista
+        // Redirigir para evitar el resubmit del formulario
         header('Location: ' . $_SERVER['PHP_SELF']);
         exit;
     }
 }
+
 
 ?>
 
@@ -65,9 +69,10 @@ if (isset($_GET['dar_baja_id'])) {
                 </thead>
                 <tbody>
                     <?php if (!empty($listaAsignaciones)): ?>
+                        <?php $contador = 1; // Inicializar contador ?>
                         <?php foreach ($listaAsignaciones as $asignacion): ?>
                             <tr>
-                                <td><?= htmlspecialchars($asignacion["id_asignacion"], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= $contador++ ?></td> <!-- Mostrar y aumentar el contador -->
                                 <td><?= htmlspecialchars($asignacion["nombre_ruta"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($asignacion["nombre_completo"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($asignacion["modelo"], ENT_QUOTES, 'UTF-8') ?></td>
@@ -76,7 +81,8 @@ if (isset($_GET['dar_baja_id'])) {
                                 <td><?= htmlspecialchars($asignacion["hora_fin"], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
                                     <?php if ($asignacion["estado"] !== "dada de baja") { ?>
-                                        <a href="?dar_baja_id=<?= $asignacion["id_asignacion"] ?>" class="btn btn-danger btn-sm"><?= htmlspecialchars($asignacion["estado"], ENT_QUOTES, 'UTF-8') ?></a>
+                                        <a href="?dar_baja_id=<?= $asignacion["id_asignacion"] ?>&id_vehiculo=<?= $asignacion["id_vehiculo"] ?>"
+                                            class="btn btn-danger btn-sm"><?= htmlspecialchars($asignacion["estado"], ENT_QUOTES, 'UTF-8') ?></a>
                                     <?php } ?>
                                 </td>
                                 <td>

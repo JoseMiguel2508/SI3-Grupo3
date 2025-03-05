@@ -190,8 +190,8 @@ DELIMITER //
 CREATE PROCEDURE InsertarAsignacionRuta(
     IN p_id_ruta INT,
     IN p_id_asignacion_Vehiculo INT,
-    IN p_hora_inicio TIME,
-    IN p_hora_fin TIME,
+    IN p_hora_inicio DATETIME,
+    IN p_hora_fin DATETIME,
     IN p_estado VARCHAR(20)
 )
 BEGIN
@@ -214,12 +214,14 @@ BEGIN
         a.hora_inicio, 
         a.hora_fin, 
         r.nombre AS nombre_ruta, 
-        a.estado
+        a.estado,
+        av.id_vehiculo
     FROM asignaciones_rutas a
     INNER JOIN asignaciones_vehiculos av ON a.id_asignacion_vehiculo = av.id_asignacion
     INNER JOIN rutas r ON a.id_ruta = r.id_ruta
     INNER JOIN vehiculos v ON av.id_vehiculo = v.id_vehiculo
-    INNER JOIN conductores c ON av.id_conductor = c.id_conductor;
+    INNER JOIN conductores c ON av.id_conductor = c.id_conductor
+    order by id_asignacion asc;
 END //
 
 DELIMITER ;
@@ -233,6 +235,51 @@ CREATE PROCEDURE EliminarAsignacionRuta(
 )
 BEGIN
     DELETE FROM asignaciones_rutas WHERE id_asignacion = p_id_asignacion;
+END //
+
+DELIMITER ;
+
+
+-------ListarAsignacionRutas---------
+DELIMITER //
+
+CREATE PROCEDURE ListaVehiculoRuta()
+BEGIN
+    SELECT 
+        ar.id_asignacion, 
+        r.nombre AS nombre_ruta, 
+        c.nombre_completo, 
+        v.modelo, 
+        v.numero_placa, 
+        ar.hora_inicio, 
+        ar.hora_fin, 
+        ar.estado,
+        r.latitud AS latitud_fin, 
+        r.longitud AS longitud_fin
+    FROM asignaciones_rutas ar
+    JOIN rutas r ON ar.id_ruta = r.id_ruta
+    JOIN asignaciones_vehiculos av ON ar.id_asignacion_vehiculo = av.id_asignacion
+    JOIN vehiculos v ON av.id_vehiculo = v.id_vehiculo
+    JOIN conductores c ON av.id_conductor = c.id_conductor
+    WHERE ar.estado = 'en_proceso'
+    ORDER BY ar.id_asignacion ASC;
+END //
+
+DELIMITER ;
+
+-------Agregar Ubicacion vehiculo---------
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarUbicacionVehiculo(
+    IN p_id_vehiculo INT,
+    IN p_latitud DECIMAL(10,8),
+    IN p_longitud DECIMAL(11,8),
+    IN p_direccion INT
+)
+BEGIN
+    INSERT INTO ubicaciones (id_vehiculo, latitud, longitud, direccion, fecha_hora) 
+    VALUES (p_id_vehiculo, p_latitud, p_longitud, p_direccion, NOW());
 END //
 
 DELIMITER ;

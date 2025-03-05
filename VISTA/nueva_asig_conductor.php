@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-sm mt-3 px-3">Asignar Vehículo</button>
+                        <button type="submit" class="btn btn-danger btn-sm mt-3 px-3">Asignar Vehículo</button>
                     </div>
                     <div class="text-center mt-2">
                         <a href="asigna_conductor.php" class="btn btn-secondary btn-sm">Cancelar</a>

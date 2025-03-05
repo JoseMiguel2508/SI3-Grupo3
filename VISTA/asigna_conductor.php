@@ -48,7 +48,7 @@ if (isset($_GET['dar_baja_id'])) {
         </form>
 
         <div class="text-end mb-3">
-            <a href="nueva_asig_conductor.php" class="btn btn-primary">Nueva Asignación</a>
+            <a href="nueva_asig_conductor.php" class="btn btn-danger">Nueva Asignación</a>
         </div>
 
         <div class="table-responsive">

@@ -82,7 +82,7 @@ $vehiculos = $controlador->obtenerVehiculos();
                 <input type="hidden" name="creado_por" value="1"> 
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-sm px-4">Registrar</button>
+                    <button type="submit" class="btn btn-danger btn-sm px-4">Registrar</button>
                 </div>
             </form>
         </div>

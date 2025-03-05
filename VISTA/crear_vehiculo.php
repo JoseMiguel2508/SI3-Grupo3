@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block mt-3">Registrar Vehículo</button>
+                    <button type="submit" class="btn btn-danger btn-block mt-3">Registrar Vehículo</button>
                     <div class="text-center mt-2">
                         <a href="main_vehiculo.php" class="btn btn-secondary btn-sm">Cancelar</a>
                     </div>

@@ -21,12 +21,9 @@ class AsignacionRutaControlador
     }
 
     // Asignar un vehículo a un conductor
-    public function asignarRuta($id_Ruta, $idasignacionVehiculo, $fechaInicio, $fechaFin, $estado)
+    public function asignarRuta($id_Ruta, $idasignacionVehiculo, $fechaInicio, $fechaFin, $estado, $idVehiculo)
     {
         $conn = Conexion::conectar();
-        $fechaInicio = date("Y-m-d H:i:s", strtotime($fechaInicio)); // Formateamos la fecha correctamente
-        $fechaFin = date("Y-m-d H:i:s", strtotime($fechaInicio));
-
         // Insertar la asignación en la base de datos
         $sql = "CALL InsertarAsignacionRuta(?, ?, ?, ?, ?)";
 
@@ -34,12 +31,25 @@ class AsignacionRutaControlador
         $stmt->bind_param("iisss", $id_Ruta, $idasignacionVehiculo, $fechaInicio, $fechaFin, $estado);
 
         if ($stmt->execute()) {
-            return true; // Retorna éxito
+            $stmt->close();
+            if ($estado == "en_proceso") {
+                // Actualizar el estado del vehículo a "en_proceso"
+                $sql = "CALL InsertarUbicacionVehiculo(?, -17.789283, -63.161669, 1)";
+                $stmtAct = $conn->prepare($sql);
+                $stmtAct->bind_param("i", $idVehiculo);
+                if ($stmtAct->execute()) {
+                    $stmtAct->close();
+                    return true; // Retorna éxito
+                } else {
+                    return true; // Retorna éxito
+                }
+            } else {
+                return true; // Retorna éxito
+            }
+
         } else {
             return false; // Retorna error
         }
-
-        $stmt->close();
     }
 
 
@@ -47,35 +57,61 @@ class AsignacionRutaControlador
     {
         $conn = Conexion::conectar();
         $sql = "CALL ObtenerAsignacionesRutas()";
-    
+
         $resultado = $conn->query($sql);
-    
+
+        // Verificar si hay resultados y convertir a un array
+        return ($resultado && $resultado->num_rows > 0) ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
+    }
+    public function obtenerAsignVehiculoActivas()
+    {
+        $conn = Conexion::conectar();
+        $sql = "CALL ListaVehiculoRuta()";
+
+        $resultado = $conn->query($sql);
+
         // Verificar si hay resultados y convertir a un array
         return ($resultado && $resultado->num_rows > 0) ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     }
 
 
-    public function cambiarEstado($idAsignacion) {
+    public function cambiarEstado($idVehiculo, $idAsignacion)
+    {
         $conn = Conexion::conectar();
-    
+
+
         // Actualizar la asignación como "cancelado" y colocar la fecha de fin
-        $sql = "UPDATE asignaciones_rutas 
-                SET estado = 'en_proceso'
-                WHERE id_asignacion = ?";
-    
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $idAsignacion);
-        if ($stmt->execute()) {
-            //$stmt->close();
-            //$conn->close();
-            return true; // Retorna éxito
-            
+        $sql = "CALL InsertarUbicacionVehiculo(?, -17.789283, -63.161669, 1)";
+
+        $stmtUbi = $conn->prepare($sql);
+        $stmtUbi->bind_param("i", $idVehiculo);
+
+        if ($stmtUbi->execute()) {
+            $stmtUbi->close();
+            // Actualizar la asignación como "cancelado" y colocar la fecha de fin
+            $sql = "UPDATE asignaciones_rutas 
+            SET estado = 'en_proceso'
+            WHERE id_asignacion = ?";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $idAsignacion);
+            if ($stmt->execute()) {
+                $stmt->close();
+                //$conn->close();
+                return true; // Retorna éxito
+            } else {
+                $stmt->close();
+                //$conn->close();
+                return false; // Retorna error
+            }
+
+
         } else {
-            //$stmt->close();
+            $stmtUbi->close();
             //$conn->close();
             return false; // Retorna error
         }
-        
+
     }
 
 
@@ -86,12 +122,29 @@ class AsignacionRutaControlador
     {
         $conn = Conexion::conectar();
         $sql = "CALL EliminarAsignacionRuta(?)";
-    
+
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id_asignacion);
 
         return $stmt->execute();
     }
+    public function cambiarUbicacion($idUbicacion, $latitud, $longitud)
+    {
+        $conn = Conexion::conectar();
+        // Actualizar la asignación como "cancelado" y colocar la fecha de fin
+        $sql = "UPDATE asignaciones_rutas 
+        SET estado = 'en_proceso'
+        WHERE id_asignacion = ?";
 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idUbicacion,$latitud, $longitud);
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true; // Retorna éxito
+        } else {
+            $stmt->close();
+            return false; // Retorna error
+        }
+    }
 }
 ?>

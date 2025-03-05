@@ -12,13 +12,19 @@ $resultRuta = $control->obtenerRutas();
 // Si el formulario se envió
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_ruta = $_POST["id_ruta"];
-    $id_asignacion = $_POST["id_asignacion"];
+    list($id_asignacion, $idvehiculo) = explode('|', $_POST["id_asignacion"]); // Separar valores
     $fecha_inicio = $_POST["fecha_inicio"];
     $fecha_fin = $_POST["fecha_fin"];
     $estado = $_POST["estado"];
 
-    // Intentar asignar ruta
-    $asignacionExitosa = $control->asignarRuta($id_ruta, $id_asignacion, $fecha_inicio, $fecha_fin, $estado);
+    $asignacionExitosa = $control->asignarRuta(
+        id_Ruta: $id_ruta, 
+        idasignacionVehiculo: $id_asignacion, 
+        fechaInicio: $fecha_inicio, 
+        fechaFin: $fecha_fin, 
+        estado: $estado, 
+        idVehiculo: $idvehiculo
+    );
 
     if ($asignacionExitosa) {
         echo "<script>alert('Ruta asignada correctamente.'); window.location.href='asigna_ruta.php';</script>";
@@ -26,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('Error al asignar la Ruta.');</script>";
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -74,12 +81,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <select id="id_asignacion" name="id_asignacion" class="form-control" required>
                                     <option value="">Seleccione un vehículo</option>
                                     <?php while ($row = $resultVehiculos->fetch_assoc()) { ?>
-                                        <option value="<?= $row['id_asignacion'] ?>">
+                                        <option value="<?= $row['id_asignacion'] ?>|<?= $row['id_vehiculo'] ?>">
                                             <?= $row['marca'] ?> - <?= $row['numero_placa'] ?> -
                                             <?= $row['nombre_conductor'] ?>
                                         </option>
                                     <?php } ?>
                                 </select>
+
                             </div>
                         </div>
                     </div>

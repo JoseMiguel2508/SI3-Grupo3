@@ -37,7 +37,7 @@ if ($resultado === false) {
     <div class="container mt-4">
         <h2 class="mb-3">Monitor de Conductores</h2>
         <div class="text-end mb-3">
-            <a href="../VISTA/registro_conductor.php" class="btn btn-primary">Nuevo Conductor</a>
+            <a href="../VISTA/registro_conductor.php" class="btn btn-danger">Nuevo Conductor</a>
         </div>
 
         <!-- Formulario de búsqueda -->
