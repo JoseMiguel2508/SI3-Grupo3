@@ -80,6 +80,9 @@ $vehiculos = $controlador->obtenerVehiculos();
                 <div class="text-center">
                     <button type="submit" class="btn btn-danger btn-sm px-4">Registrar</button>
                 </div>
+                <div class="text-center mt-2">
+                        <a href="lista_mantenimiento.php" class="btn btn-secondary btn-sm">Cancelar</a>
+                    </div>
             </form>
         </div>
     </div>
