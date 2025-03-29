@@ -5,7 +5,7 @@
     height: 2rem;
     padding: 0 1rem;
     border-radius: 1.5rem;
-    background: #3d3a4e;
+    background: #4689a7;
     background-size: 400%;
     color: #fff;
     border: none;
@@ -32,7 +32,7 @@
     height: inherit;
     border-radius: inherit;
     background: linear-gradient(82.3deg,
-            rgb(219, 104, 37) 10.8%,
-            rgb(90, 154, 64) 94.3%);
+            #144961 20%,
+            #4689a7 80%);
     transition: all 0.475s;
 }
