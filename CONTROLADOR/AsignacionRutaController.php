@@ -146,5 +146,21 @@ class AsignacionRutaControlador
             return false; // Retorna error
         }
     }
+    public function obtenerReporteAsignacionesRutas($fechaInicio, $fechaFin)
+    {
+        $conn = Conexion::conectar();
+        // Llamamos al procedimiento almacenado para obtener las asignaciones de rutas en el rango de fechas
+        $sql = "CALL reporte_asignaciones_rutas(?, ?)";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $fechaInicio, $fechaFin);
+        $stmt->execute();
+        
+        $resultado = $stmt->get_result();
+
+        // Verificar si hay resultados y convertir a un array
+        return ($resultado && $resultado->num_rows > 0) ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
+    }
 }
+
 ?>

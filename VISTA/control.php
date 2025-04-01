@@ -84,90 +84,79 @@ $listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var modal = document.getElementById("mapModal");
-            var map, vehicleMarker;
+    document.addEventListener("DOMContentLoaded", function () {
+    var modal = document.getElementById("mapModal");
+    var map, vehicleMarker, routingControl;
 
-            modal.addEventListener("shown.bs.modal", function (event) {
-                var button = event.relatedTarget;
-                var end = button.getAttribute("data-end").split(",");
+    modal.addEventListener("shown.bs.modal", function (event) {
+        var button = event.relatedTarget;
+        var end = button.getAttribute("data-end").split(",");
 
-                var startLatLng = L.latLng(-17.789283449574143, -63.16166950140825); // Punto de partida
-                var endLatLng = L.latLng(parseFloat(end[0]), parseFloat(end[1]));   // Destino
-                var vehicleLatLng = L.latLng(-17.790500, -63.160000);  // Posición inicial del vehículo
+        var startLatLng = L.latLng(-17.789283449574143, -63.16166950140825);
+        var endLatLng = L.latLng(parseFloat(end[0]), parseFloat(end[1]));
+        var vehicleLatLng = L.latLng(-17.790500, -63.160000);
 
-                // Elimina el contenido del mapa anterior si existe
-                var mapContainer = document.getElementById("map");
-                mapContainer.innerHTML = "";
+        var mapContainer = document.getElementById("map");
+        mapContainer.innerHTML = "";
 
-                // Inicializar el mapa
-                map = L.map(mapContainer).setView(startLatLng, 10);
+        map = L.map(mapContainer).setView(startLatLng, 10);
 
-                // Agregar capa base
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-                // Agregar marcadores
-                L.marker(startLatLng).addTo(map).bindPopup("Punto de Partida").openPopup();
-                L.marker(endLatLng).addTo(map).bindPopup("Punto de Llegada").openPopup();
+        L.marker(startLatLng).addTo(map).bindPopup("Punto de Partida").openPopup();
+        L.marker(endLatLng).addTo(map).bindPopup("Punto de Llegada").openPopup();
 
-                // 🔴 Agregar el marcador del vehículo
-                vehicleMarker = L.marker(vehicleLatLng, {
-                    icon: L.icon({
-                        iconUrl: 'https://cdn-icons-png.flaticon.com/512/1483/1483336.png', // Ícono de camión
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 16]
-                    })
-                }).addTo(map).bindPopup("Vehículo en movimiento");
-
-                // 🛣 Dibujar la ruta
-                var routingControl = L.Routing.control({
-                    waypoints: [startLatLng, endLatLng],
-                    createMarker: function (i, waypoint, n) {
-                        return L.marker(waypoint.latLng, {
-                            title: i === 0 ? "Salida" : "Llegada"
-                        });
-                    },
-                    lineOptions: {
-                        styles: [{ color: '#007bff', weight: 5 }]
-                    },
-                    routeWhileDragging: false,
-                    addWaypoints: false,
-                    draggableWaypoints: false,
-                    show: false
-                }).addTo(map);
-
-                // 📍 Simular el movimiento del vehículo cada 3 segundos
-                var progress = 0;
-                var interval = setInterval(function () {
-                    if (progress >= 1) {
-                        clearInterval(interval);
-                        return;
-                    }
-
-                    var newLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * progress;
-                    
-                    var newLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * progress;
-
-                    vehicleMarker.setLatLng([newLat, newLng]);
-                    progress += 0.1;  // Incremento de la posición del vehículo
-                }, 3000);
-
-                // Ajustar vista del mapa
-                setTimeout(function () {
-                    map.invalidateSize();
-                    map.fitBounds(L.latLngBounds([startLatLng, endLatLng]));
-                }, 200);
-            });
-
-            // Eliminar el mapa al cerrar el modal
-            modal.addEventListener("hidden.bs.modal", function () {
-                if (map) {
-                    map.remove();
-                }
-            });
+        // 🚌 Icono de autobús
+        var busIcon = L.icon({
+            iconUrl: 'https://cdn-icons-png.flaticon.com/512/2089/2089885.png', // Ícono de autobús
+            iconSize: [45, 45], 
+            iconAnchor: [22, 22]
         });
+
+        vehicleMarker = L.marker(vehicleLatLng, { icon: busIcon }).addTo(map).bindPopup("Autobús en movimiento");
+
+        routingControl = L.Routing.control({
+            waypoints: [startLatLng, endLatLng],
+            createMarker: function () { return null; },
+            lineOptions: { styles: [{ color: '#007bff', weight: 5 }] },
+            routeWhileDragging: false,
+            addWaypoints: false,
+            draggableWaypoints: false,
+            show: false
+        }).addTo(map);
+
+        routingControl.on('routesfound', function (e) {
+            var route = e.routes[0].coordinates;
+            animateVehicle(route);
+        });
+
+        function animateVehicle(route) {
+            var index = 0;
+
+            function moveNext() {
+                if (index < route.length) {
+                    vehicleMarker.setLatLng(route[index]);
+                    index++;
+                    setTimeout(moveNext, 500); // Ajusta la velocidad del movimiento
+                }
+            }
+
+            moveNext();
+        }
+
+        setTimeout(function () {
+            map.invalidateSize();
+            map.fitBounds(L.latLngBounds([startLatLng, endLatLng]));
+        }, 200);
+    });
+
+    modal.addEventListener("hidden.bs.modal", function () {
+        if (map) map.remove();
+    });
+});
+
 
     </script>
 </body>

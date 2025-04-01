@@ -6,8 +6,8 @@ $controlador = new AsignacionControlador();
 
 // Obtener los conductores y vehículos disponibles
 $resultConductores = $controlador->obtenerConductoresDisponibles();
+//$resultVehiculos = $controlador->obtenerVehiculosDisponibles();
 $resultVehiculos = $controlador->obtenerVehiculosDisponibles();
-$resultVehiculos = $modelo->obtenerVehiculosDisponibles(); // Nueva función en el modelo
 // Si el formulario se envió
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_conductor = $_POST["id_conductor"];
@@ -67,18 +67,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
 
                         <div class="form-group col-md-6">
-                            <div class="input-field">
-                                <span class="fas fa-car p-2"></span>
-                                <select id="id_vehiculo" name="id_vehiculo" class="form-control" required>
-                                    <option value="">Seleccione un vehículo</option>
-                                    <?php while ($row = $resultVehiculos->fetch_assoc()) { ?>
-                                        <option value="<?= $row['id_vehiculo'] ?>">
-                                            <?= $row['marca'] ?>     <?= $row['modelo'] ?> - <?= $row['numero_placa'] ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
+    <div class="input-field">
+        <span class="fas fa-car p-2"></span>
+        <select id="id_vehiculo" name="id_vehiculo" class="form-control" required>
+            <option value="">Seleccione un vehículo</option>
+            <?php 
+            // Suponiendo que $resultVehiculos es el resultado de la consulta de vehículos sin asignación
+            while ($row = $resultVehiculos->fetch_assoc()) { ?>
+                <option value="<?= $row['id_vehiculo'] ?>">
+                    <?= $row['marca'] ?> <?= $row['modelo'] ?> - <?= $row['numero_placa'] ?>
+                </option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
+
                     </div>
 
                     <div class="form-group">

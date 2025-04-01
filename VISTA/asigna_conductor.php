@@ -47,9 +47,12 @@ if (isset($_GET['dar_baja_id'])) {
             </div>
         </form>
 
+        <!-- Botones de acción -->
         <div class="text-end mb-3">
             <a href="nueva_asig_conductor.php" class="btn btn-danger">Nueva Asignación</a>
+            <a href="reporte_asignacion_vehiculo.php" class="btn btn-info">Ver Reportes</a> <!-- Botón de reportes -->
         </div>
+        
 
         <div class="table-responsive">
             <table class="table table-striped">

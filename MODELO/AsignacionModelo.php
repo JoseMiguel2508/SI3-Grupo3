@@ -20,8 +20,26 @@ class AsignacionModelo {
         $resultado = $this->conn->query($sql);
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
+    public function obtenerVehiculosDisponibles() {
+        $sql = "SELECT id_vehiculo, marca, modelo, numero_placa 
+                FROM vehiculos 
+                WHERE id_vehiculo NOT IN (
+                    SELECT id_vehiculo FROM asignaciones_vehiculos WHERE estado = 'activo'
+                )
+                 AND id_vehiculo NOT IN (
+                SELECT id_vehiculo FROM mantenimientos WHERE estado = 'en mantenimiento'
+            )"; 
+        return $this->conn->query($sql);
+    }
+    public function reporteAsignacionVehiculo($fechaInicio, $fechaFin) {
+        $query = "CALL ReporteAsignacionVehiculo(?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ss", $fechaInicio, $fechaFin);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
     
-
 
 }
 ?>

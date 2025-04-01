@@ -1,27 +1,53 @@
+<?php
+require_once '../CONTROLADOR/AlertaControlador.php';
+
+$controlador = new AlertaControlador();
+$alertas = $controlador->listarAlertas();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Navbar Mejorado</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../CONTROLADOR/css/navbar.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
+
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="container-fluid justify-content-center">
             <a class="navbar-brand" href="#">
-                <img src="../MODELO/assets/img/logo.PNG" alt="Logo" width="80" height="54"
-                    class="d-inline-block align-text-top">
+                <img src="../MODELO/assets/img/logo.PNG" alt="Logo" width="80" height="54" class="d-inline-block align-text-top">
                 Trans Aerosur
             </a>
         </div>
     </nav>
+<!-- Sección de Alertas -->
+<div class="container mt-3">
+        <?php if (!empty($alertas)): ?>
+            <div class="alert alert-danger text-center">
+                <h4>⚠ Alertas de Mantenimiento</h4>
+                <ul class="mb-0">
+                    <?php foreach ($alertas as $alerta): ?>
+                        <li>
+                            <?= htmlspecialchars($alerta['descripcion']) ?>  
+                            (Severidad: <strong><?= ucfirst(htmlspecialchars($alerta['severidad'])) ?></strong>)
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-success text-center">
+                ✅ No hay alertas activas en este momento.
+            </div>
+        <?php endif; ?>
+    </div>
 
+    <!-- Sección de Navegación -->
     <div class="d-flex flex-column vh-100 align-items-center">
         <div class="radio-inputs mb-3">
             <label class="radio">
@@ -65,8 +91,6 @@
         };
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

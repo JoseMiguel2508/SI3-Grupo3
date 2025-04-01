@@ -15,21 +15,23 @@ class MantenimientoModelo {
                 LEFT JOIN usuarios u ON rm.creado_por = u.id_usuario";
         return $this->conexion->query($sql);
     }
-
     public function registrarMantenimiento($id_vehiculo, $tipo, $descripcion, $costo, $fecha_servicio, $fecha_proximo, $estado, $creado_por) {
         $sql = "INSERT INTO registros_mantenimiento (id_vehiculo, tipo_mantenimiento, descripcion, costo, fecha_servicio, fecha_proximo_servicio, estado, creado_por) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->conexion->prepare($sql);
-    
-        // Si notas está vacío, asignamos NULL
-        if (empty($notas)) {
-            $stmt->bind_param("issdsssi", $id_vehiculo, $tipo, $descripcion, $costo, $fecha_servicio, $fecha_proximo, $estado, $creado_por);
-        } else {
-            $stmt->bind_param("issdsssi", $id_vehiculo, $tipo, $descripcion, $costo, $fecha_servicio, $fecha_proximo, $estado, $creado_por);
+        $stmt->bind_param("issdsssi", $id_vehiculo, $tipo, $descripcion, $costo, $fecha_servicio, $fecha_proximo, $estado, $creado_por);
+        
+        if ($stmt->execute()) {
+            // Actualiza el estado del vehículo a "mantenimiento"
+            $sql_update = "UPDATE vehiculos SET estado = 'mantenimiento' WHERE id_vehiculo = ?";
+            $stmt_update = $this->conexion->prepare($sql_update);
+            $stmt_update->bind_param("i", $id_vehiculo);
+            return $stmt_update->execute();
         }
-    
-        return $stmt->execute();
+        
+        return false;
     }
+    
     
     
 
@@ -50,11 +52,35 @@ class MantenimientoModelo {
 
 // Método para actualizar el estado del mantenimiento a "completado"
 public function actualizarEstadoMantenimiento($id_mantenimiento) {
+    // Actualizar el estado del mantenimiento a 'completado'
     $sql = "UPDATE registros_mantenimiento SET estado = 'completado' WHERE id_mantenimiento = ?";
     $stmt = $this->conexion->prepare($sql);
-    $stmt->bind_param("i", $id_mantenimiento); // "i" es para integer
-    return $stmt->execute();
+    $stmt->bind_param("i", $id_mantenimiento);
+    $resultado = $stmt->execute();
+
+    if ($resultado) {
+        // Obtener el ID del vehículo asociado al mantenimiento
+        $queryVehiculo = "SELECT id_vehiculo FROM registros_mantenimiento WHERE id_mantenimiento = ?";
+        $stmtVehiculo = $this->conexion->prepare($queryVehiculo);
+        $stmtVehiculo->bind_param("i", $id_mantenimiento);
+        $stmtVehiculo->execute();
+        $resultVehiculo = $stmtVehiculo->get_result();
+        $vehiculo = $resultVehiculo->fetch_assoc();
+
+        if ($vehiculo) {
+            $id_vehiculo = $vehiculo['id_vehiculo'];
+
+            // Resolver las alertas activas de mantenimiento para este vehículo
+            $queryAlerta = "UPDATE alertas SET estado = 'resuelta', fecha_resolucion = NOW() WHERE id_vehiculo = ? AND tipo_alerta = 'mantenimiento' AND estado = 'activa'";
+            $stmtAlerta = $this->conexion->prepare($queryAlerta);
+            $stmtAlerta->bind_param("i", $id_vehiculo);
+            $stmtAlerta->execute();
+        }
+    }
+
+    return $resultado;
 }
+
     
 public function obtenerVehiculosDisponibles() {
     $sql = "SELECT v.id_vehiculo, v.marca, v.modelo, v.numero_placa

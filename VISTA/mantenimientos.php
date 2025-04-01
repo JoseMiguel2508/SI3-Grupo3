@@ -71,7 +71,7 @@ $vehiculos = $controlador->obtenerVehiculos();
                     </div>
                     <div class="form-group col-md-6">
                         <label>Próximo Servicio</label>
-                        <input type="date" id="fecha_proximo_servicio" name="fecha_proximo_servicio" class="form-control" readonly>
+                        <input type="date" id="fecha_proximo_servicio" name="fecha_proximo_servicio" class="form-control" required>
                     </div>
                 </div>
 

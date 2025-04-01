@@ -283,3 +283,56 @@ BEGIN
 END $$
 
 DELIMITER ;
+DELIMITER $$
+
+CREATE PROCEDURE reporteAsignacionVehiculo(IN fechaInicio DATETIME, IN fechaFin DATETIME)
+BEGIN
+    SELECT 
+        a.id_asignacion,
+        c.nombre_completo AS conductor,
+        v.numero_placa AS vehiculo,
+        v.marca,
+        v.modelo,
+        a.fecha_inicio,
+        a.fecha_fin,
+        a.estado
+    FROM asignaciones_vehiculos a
+    INNER JOIN conductores c ON a.id_conductor = c.id_conductor
+    INNER JOIN vehiculos v ON a.id_vehiculo = v.id_vehiculo
+    WHERE a.fecha_inicio BETWEEN fechaInicio AND fechaFin
+    ORDER BY a.fecha_inicio;
+END 
+
+DELIMITER ;
+DELIMITER $$
+
+CREATE PROCEDURE reporte_asignaciones_rutas(
+    IN fecha_inicio_param DATE,
+    IN fecha_fin_param DATE
+)
+BEGIN
+    SELECT 
+        ar.id_asignacion AS id_asignacion,
+        r.nombre AS rutas,
+        v.numero_placa AS vehiculos,
+        c.nombre_completo AS conductores,
+        ar.hora_inicio AS hora_inicio,
+        ar.hora_fin AS hora_fin,
+        ar.estado AS estado
+    FROM 
+        asignaciones_rutas ar
+    JOIN 
+        rutas r ON ar.id_ruta = r.id_ruta
+    JOIN 
+        asignaciones_vehiculos av ON ar.id_asignacion_vehiculo = av.id_asignacion
+    JOIN 
+        vehiculos v ON av.id_vehiculo = v.id_vehiculo
+    JOIN 
+        conductores c ON av.id_conductor = c.id_conductor
+    WHERE
+        ar.hora_inicio BETWEEN fecha_inicio_param AND fecha_fin_param
+    ORDER BY
+        ar.hora_inicio DESC;
+END
+
+DELIMITER ;

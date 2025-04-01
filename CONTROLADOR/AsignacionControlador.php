@@ -1,19 +1,21 @@
 <?php
 require_once '../MODELO/AsignacionModelo.php';
 require_once '../MODELO/conex_consulta.php'; // Para la conexión a la base de datos
-
 class AsignacionControlador {
     private $modelo;
 
     public function __construct() {
         $this->modelo = new AsignacionModelo();
+
     }
 
     // Obtener asignaciones activas
     public function obtenerAsignacionesActivas() {
         return $this->modelo->obtenerAsignacionesActivas();
     }
-
+    public function obtenerReporteAsignacionVehiculo($fechaInicio, $fechaFin) {
+        return $this->modelo->reporteAsignacionVehiculo($fechaInicio, $fechaFin);
+    }
     // Obtener lista de conductores disponibles (sin vehículo asignado)
     public function obtenerConductoresDisponibles() {
         $conn = Conexion::conectar();
@@ -27,13 +29,14 @@ class AsignacionControlador {
     // Obtener lista de vehículos disponibles (sin conductor asignado)
     public function obtenerVehiculosDisponibles() {
         $conn = Conexion::conectar();
+        // Modificación aquí: excluimos vehículos ya asignados a un conductor
         $sql = "SELECT id_vehiculo, marca, modelo, numero_placa 
                 FROM vehiculos 
                 WHERE estado = 'activo' 
                 AND id_vehiculo NOT IN (SELECT id_vehiculo FROM asignaciones_vehiculos WHERE estado = 'activo')";
         return $conn->query($sql);
     }
-
+    
     // Asignar un vehículo a un conductor
     public function asignarVehiculo($idConductor, $idVehiculo, $fechaInicio) {
         $conn = Conexion::conectar();
@@ -166,7 +169,7 @@ class AsignacionControlador {
         } else {
             return false;
         }
-    
+
         // Cerrar las declaraciones y la conexión
         $stmt->close();
         $stmtLiberarConductor->close();
