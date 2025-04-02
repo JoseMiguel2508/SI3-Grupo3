@@ -21,8 +21,8 @@ $alertas = $controlador->listarAlertas();
     <nav class="navbar">
         <div class="container-fluid justify-content-center">
             <a class="navbar-brand" href="#">
-                <img src="../MODELO/assets/img/logo.PNG" alt="Logo" width="80" height="54" class="d-inline-block align-text-top">
-                Trans Aerosur
+                <img src="../MODELO/assets/img/logo_3.PNG" alt="Logo" width="80" height="54" class="d-inline-block align-text-top">
+                TRANS UPDS
             </a>
         </div>
     </nav>
@@ -41,9 +41,7 @@ $alertas = $controlador->listarAlertas();
                 </ul>
             </div>
         <?php else: ?>
-            <div class="alert alert-success text-center">
-                ✅ No hay alertas activas en este momento.
-            </div>
+
         <?php endif; ?>
     </div>
 
