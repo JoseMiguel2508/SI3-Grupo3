@@ -101,6 +101,21 @@ CREATE TABLE asignaciones_rutas (
     FOREIGN KEY (id_asignacion_vehiculo) REFERENCES asignaciones_vehiculos(id_asignacion)
 );
 
+-- Tabla de Viajes (modificada para permitir eliminar asignaciones_rutas)
+CREATE TABLE viajes (
+    id_viaje INT PRIMARY KEY AUTO_INCREMENT,
+    id_asignacion INT,
+    fecha_inicio DATETIME NOT NULL,
+    fecha_fin DATETIME,
+    kilometraje_inicio DECIMAL(10, 2) NOT NULL,
+    kilometraje_fin DECIMAL(10, 2) NOT NULL,
+    combustible_inicio DECIMAL(10, 2) NOT NULL,
+    combustible_fin DECIMAL(10, 2) NOT NULL,
+    estado ENUM('pendiente', 'en_proceso', 'completado', 'cancelado') DEFAULT 'pendiente',
+    FOREIGN KEY (id_asignacion) REFERENCES asignaciones_rutas(id_asignacion) ON DELETE SET NULL
+);
+
+
 -- Tabla de Alertas
 CREATE TABLE alertas (
     id_alerta INT PRIMARY KEY AUTO_INCREMENT,
@@ -116,6 +131,7 @@ CREATE TABLE alertas (
     FOREIGN KEY (resuelto_por) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
 
+-- Datos de prueba
 INSERT INTO rutas (nombre, descripcion, punto_inicio, punto_fin, duracion_estimada, latitud, longitud) VALUES
 ('Santa Cruz - La Paz', 'Ruta desde Santa Cruz hasta La Paz', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de La Paz', 17, -16.50000000, -68.15000000),
 ('Santa Cruz - Cochabamba', 'Ruta desde Santa Cruz hasta Cochabamba', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cochabamba', 9, -17.39360000, -66.15730000),
@@ -125,3 +141,8 @@ INSERT INTO rutas (nombre, descripcion, punto_inicio, punto_fin, duracion_estima
 ('Santa Cruz - Tarija', 'Ruta desde Santa Cruz hasta Tarija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Tarija', 15, -21.53550000, -64.72960000),
 ('Santa Cruz - Trinidad', 'Ruta desde Santa Cruz hasta Trinidad', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Trinidad', 10, -14.83330000, -64.90000000),
 ('Santa Cruz - Cobija', 'Ruta desde Santa Cruz hasta Cobija', 'Terminal Bimodal de Santa Cruz', 'Terminal de Buses de Cobija', 24, -11.02640000, -68.76920000);
+
+
+
+
+SELECT id_viaje,id_asignacion, fecha_inicio, fecha_fin FROM viajes;

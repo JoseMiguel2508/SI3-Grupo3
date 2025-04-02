@@ -305,8 +305,7 @@ END
 
 DELIMITER ;
 DELIMITER $$
-
-CREATE PROCEDURE reporte_asignaciones_rutas(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reporte_asignaciones_rutas`(
     IN fecha_inicio_param DATE,
     IN fecha_fin_param DATE
 )
@@ -314,8 +313,8 @@ BEGIN
     SELECT 
         ar.id_asignacion AS id_asignacion,
         r.nombre AS rutas,
-        v.numero_placa AS vehiculos,
-        c.nombre_completo AS conductores,
+        v.numero_placa AS vehiculo,
+        c.nombre_completo AS conductor,
         ar.hora_inicio AS hora_inicio,
         ar.hora_fin AS hora_fin,
         ar.estado AS estado
@@ -333,6 +332,66 @@ BEGIN
         ar.hora_inicio BETWEEN fecha_inicio_param AND fecha_fin_param
     ORDER BY
         ar.hora_inicio DESC;
+END$$
+
+DELIMITER ;
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE insertar_viaje_cambio_estado(
+    IN p_id_asignacion INT,
+    IN p_kilometraje_inicio DECIMAL(10, 2),
+    IN p_combustible_inicio DECIMAL(10, 2)
+)
+BEGIN
+    -- Declarar las variables para almacenar las fechas
+    DECLARE v_fecha_inicio DATETIME;
+    DECLARE v_fecha_fin DATETIME;
+
+    -- Obtener la fecha de inicio de la asignación
+    SELECT hora_inicio INTO v_fecha_inicio
+    FROM asignaciones_rutas
+    WHERE id_asignacion = p_id_asignacion;
+
+    -- Obtener la fecha de fin de la asignación (si existe)
+    SELECT hora_fin INTO v_fecha_fin
+    FROM asignaciones_rutas
+    WHERE id_asignacion = p_id_asignacion;
+
+    -- Si la asignación no existe o la fecha de inicio es NULL, salimos del procedimiento
+    IF v_fecha_inicio IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La asignación con el ID proporcionado no existe o no tiene fecha de inicio.';
+    END IF;
+
+    -- Si hora_fin es NULL, asignar la fecha y hora actuales
+    IF v_fecha_fin IS NULL THEN
+        SET v_fecha_fin = NOW();  -- O usa la fecha de inicio si lo prefieres
+    END IF;
+
+    -- Cambiar el estado de la asignación a 'en_proceso'
+    UPDATE asignaciones_rutas
+    SET estado = 'en_proceso'
+    WHERE id_asignacion = p_id_asignacion;
+
+    -- Insertar el viaje en la tabla viajes
+    INSERT INTO viajes (
+        id_asignacion, 
+        fecha_inicio, 
+        fecha_fin, 
+        kilometraje_inicio, 
+        combustible_inicio, 
+        estado
+    )
+    VALUES (
+        p_id_asignacion,
+        v_fecha_inicio,
+        v_fecha_fin,
+        p_kilometraje_inicio,
+        p_combustible_inicio,
+        'en_proceso'
+    );
 END
 
 DELIMITER ;

@@ -1,6 +1,6 @@
 <?php
-require_once '../MODELO/Alerta.php';
-
+require_once '../MODELO/conex_consulta.php'; // Para la conexión a la base de datos
+require_once '../MODELO/Alerta.php';  // Incluir la clase Alerta
 class AlertaControlador {
     private $modelo;
 

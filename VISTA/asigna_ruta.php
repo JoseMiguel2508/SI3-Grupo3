@@ -48,10 +48,11 @@ if (isset($_GET['dar_baja_id']) && isset($_GET['id_vehiculo'])) {
     <div class="container mt-4">
         <h2 class="text-center">Lista de Asignaciones de Rutas</h2>
 
+        <!-- Botones de acción -->
         <div class="text-end mb-3">
             <a href="nueva_asig_ruta.php" class="btn btn-danger">Nueva Asignación</a>
+            <a href="reporte_asignaciones_rutas.php" class="btn btn-info">Ver Reportes</a> <!-- Botón de reportes -->
         </div>
-
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>

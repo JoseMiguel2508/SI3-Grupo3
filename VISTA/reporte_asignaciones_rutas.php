@@ -5,7 +5,11 @@ $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01'); // Inicio del mes actual
 $fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d'); // Fecha actual
 
 $reporte = $controlador->obtenerAsignacionesActivas($fechaInicio, $fechaFin);
+
+// Depuración: ver el contenido de $reporte
 ?>
+
+<!-- Resto del código sigue igual -->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -53,9 +57,9 @@ $reporte = $controlador->obtenerAsignacionesActivas($fechaInicio, $fechaFin);
                 <?php foreach ($reporte as $index => $fila): ?>
                     <tr>
                         <td><?= $index + 1 ?></td>
-                        <td><?= htmlspecialchars($fila['rutas']) ?></td>
-                        <td><?= htmlspecialchars($fila['vehiculos']) ?></td>
-                        <td><?= htmlspecialchars($fila['conductores']) ?></td>
+                        <td><?= htmlspecialchars($fila['nombre_ruta']) ?></td> <!-- 'nombre_ruta' -->
+                        <td><?= htmlspecialchars($fila['modelo']) ?></td> <!-- 'modelo' -->
+                        <td><?= htmlspecialchars($fila['nombre_completo']) ?></td> <!-- 'nombre_completo' -->
                         <td><?= htmlspecialchars($fila['hora_inicio']) ?></td>
                         <td><?= htmlspecialchars($fila['hora_fin']) ?></td>
                         <td>
@@ -83,3 +87,4 @@ $reporte = $controlador->obtenerAsignacionesActivas($fechaInicio, $fechaFin);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

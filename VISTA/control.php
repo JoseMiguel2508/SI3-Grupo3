@@ -30,6 +30,9 @@ $listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
     <div class="container mt-4">
         <h2 class="mb-3">Monitor de Flotas en Ruta</h2>
 
+        <div class="text-end mb-3">
+            <a href="historial_viajes.php" class="btn btn-danger">Historial de Viajes </a>
+        </div>
         <div class="row">
             <?php if (!empty($listaAsignaciones)): ?>
                 <?php foreach ($listaAsignaciones as $asignacion): ?>
@@ -84,9 +87,10 @@ $listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     var modal = document.getElementById("mapModal");
     var map, vehicleMarker, routingControl;
+    var kilometrajeInicio = 0;  // Variable para almacenar el kilometraje acumulado
 
     modal.addEventListener("shown.bs.modal", function (event) {
         var button = event.relatedTarget;
@@ -134,10 +138,20 @@ $listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
 
         function animateVehicle(route) {
             var index = 0;
+            var prevLatLng = startLatLng; // Variable para almacenar la posición anterior
 
             function moveNext() {
                 if (index < route.length) {
-                    vehicleMarker.setLatLng(route[index]);
+                    var currentLatLng = route[index];
+                    vehicleMarker.setLatLng(currentLatLng);
+                    
+                    // Calcular el kilometraje
+                    kilometrajeInicio += prevLatLng.distanceTo(currentLatLng) / 1000;  // Convertir a kilómetros
+                    prevLatLng = currentLatLng;
+
+                    // Mostrar el kilometraje en el marcador del vehículo
+                    vehicleMarker.bindPopup("Kilometraje: " + kilometrajeInicio.toFixed(2) + " km");
+
                     index++;
                     setTimeout(moveNext, 500); // Ajusta la velocidad del movimiento
                 }
@@ -156,9 +170,8 @@ $listaAsignaciones = $asignacionRuta->obtenerAsignVehiculoActivas();
         if (map) map.remove();
     });
 });
+</script>
 
-
-    </script>
 </body>
 
 </html>
