@@ -282,7 +282,10 @@ BEGIN
     VALUES (p_id_vehiculo, p_latitud, p_longitud, p_direccion, NOW());
 END $$
 
+
+--nuevos precedure
 DELIMITER ;
+--ejecutar antes
 DELIMITER $$
 
 CREATE PROCEDURE reporteAsignacionVehiculo(IN fechaInicio DATETIME, IN fechaFin DATETIME)
@@ -304,8 +307,12 @@ BEGIN
 END 
 
 DELIMITER ;
+
+--ejecutar antes
+
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reporte_asignaciones_rutas`(
+
+CREATE PROCEDURE `reporte_asignaciones_rutas`(
     IN fecha_inicio_param DATE,
     IN fecha_fin_param DATE
 )
@@ -336,8 +343,11 @@ END$$
 
 DELIMITER ;
 
+
 DELIMITER ;
 
+DELIMITER ;
+--ejecutar antes
 DELIMITER $$
 CREATE PROCEDURE insertar_viaje_cambio_estado(
     IN p_id_asignacion INT,

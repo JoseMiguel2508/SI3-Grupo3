@@ -4,7 +4,8 @@ $controlador = new AsignacionRutaControlador();
 $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-01'); // Inicio del mes actual
 $fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d'); // Fecha actual
 
-$reporte = $controlador->obtenerAsignacionesActivas($fechaInicio, $fechaFin);
+// Usar la nueva función para obtener el reporte
+$reporte = $controlador->generarReporteAsignaciones($fechaInicio, $fechaFin);
 
 // Depuración: ver el contenido de $reporte
 ?>
@@ -57,9 +58,9 @@ $reporte = $controlador->obtenerAsignacionesActivas($fechaInicio, $fechaFin);
                 <?php foreach ($reporte as $index => $fila): ?>
                     <tr>
                         <td><?= $index + 1 ?></td>
-                        <td><?= htmlspecialchars($fila['nombre_ruta']) ?></td> <!-- 'nombre_ruta' -->
-                        <td><?= htmlspecialchars($fila['modelo']) ?></td> <!-- 'modelo' -->
-                        <td><?= htmlspecialchars($fila['nombre_completo']) ?></td> <!-- 'nombre_completo' -->
+                        <td><?= htmlspecialchars($fila['rutas']) ?></td> <!-- 'rutas' -->
+                        <td><?= htmlspecialchars($fila['vehiculo']) ?></td> <!-- 'vehiculo' -->
+                        <td><?= htmlspecialchars($fila['conductor']) ?></td> <!-- 'conductor' -->
                         <td><?= htmlspecialchars($fila['hora_inicio']) ?></td>
                         <td><?= htmlspecialchars($fila['hora_fin']) ?></td>
                         <td>
@@ -79,12 +80,11 @@ $reporte = $controlador->obtenerAsignacionesActivas($fechaInicio, $fechaFin);
 
     <!-- Botones de Exportación -->
     <div class="mt-3">
-        <a href="exportar_pdf.php?fecha_inicio=<?= $fechaInicio ?>&fecha_fin=<?= $fechaFin ?>" class="btn btn-danger">📄 Exportar PDF</a>
-        <a href="exportar_excel.php?fecha_inicio=<?= $fechaInicio ?>&fecha_fin=<?= $fechaFin ?>" class="btn btn-success">📊 Exportar Excel</a>
+        <a href="exportar_pdf_ruta.php?fecha_inicio=<?= $fechaInicio ?>&fecha_fin=<?= $fechaFin ?>" class="btn btn-danger">📄 Exportar PDF</a>
+        <a href="exportar_excel_ruta.php?fecha_inicio=<?= $fechaInicio ?>&fecha_fin=<?= $fechaFin ?>" class="btn btn-success">📊 Exportar Excel</a>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

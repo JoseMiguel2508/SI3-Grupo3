@@ -1,9 +1,12 @@
 <?php
 
 require_once '../MODELO/conex_consulta.php'; // Para la conexión a la base de datos
+require_once __DIR__ . '/../MODELO/Asignacion_ruta.php';
 
 class AsignacionRutaControlador
 {
+    // Método para obtener las asignaciones activas, ahora usa el modelo
+   
     // Obtener lista de rutas
     public function obtenerRutas()
     {
@@ -63,6 +66,29 @@ class AsignacionRutaControlador
         return ($resultado && $resultado->num_rows > 0) ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     }
     
+    public function generarReporteAsignaciones($fechaInicio, $fechaFin)
+{
+    // Establecer la conexión con la base de datos
+    $conn = Conexion::conectar();
+    
+    // Llamamos al procedimiento almacenado para obtener las asignaciones de rutas en el rango de fechas
+    $sql = "CALL reporte_asignaciones_rutas(?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $fechaInicio, $fechaFin); // Enlazamos las fechas a los parámetros
+    $stmt->execute();
+    
+    // Obtener el resultado de la ejecución del procedimiento almacenado
+    $resultado = $stmt->get_result();
+    
+    // Verificar si hay resultados y devolverlos como un array asociativo
+    if ($resultado && $resultado->num_rows > 0) {
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    } else {
+        return []; // Si no hay resultados, devolvemos un array vacío
+    }
+}
+
     public function obtenerAsignVehiculoActivas()
     {
         $conn = Conexion::conectar();
